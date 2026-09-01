@@ -210,7 +210,7 @@ The project will be developed incrementally.
 * [x] Set up React
 * [x] Set up Git
 * [x] Connect project to GitHub
-* [ ] Set up PostgreSQL with Docker Compose
+* [x] Set up PostgreSQL with Docker Compose
 * [ ] Design database schema
 * [ ] Create FastAPI backend
 * [ ] Connect FastAPI to PostgreSQL
