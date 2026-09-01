@@ -1,0 +1,24 @@
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Python
+backend/__pycache__/
+backend/.venv/
+backend/venv/
+*.pyc
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# PostgreSQL / Docker
+postgres-data/
+
+# VS Code
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
