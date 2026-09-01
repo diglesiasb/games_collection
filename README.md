@@ -1,6 +1,6 @@
 # 🎮 Games Collection
 
-A personal web application to manage and explore a physical video game collection.
+A personal web application to manage and explore a video game collection.
 
 The goal is simple: keep track of the games I own, what I am currently playing, what I have completed, and all the information surrounding my collection.
 
