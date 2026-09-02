@@ -1,8 +1,13 @@
-from fastapi import FastAPI
-from sqlalchemy import text
+from fastapi import FastAPI, Depends
+from sqlalchemy import text, select
+from sqlalchemy.orm import Session
 
 from .database import engine
+from .models.game import Game
 
+def get_db():
+    with Session(engine) as session:
+        yield session
 
 app = FastAPI(
     title="Games Collection API",
@@ -33,3 +38,10 @@ def database_health():
             "status": "ok",
             "database": result.scalar_one()
         }
+
+@app.get("/games")
+def get_games(db: Session = Depends(get_db)):
+    result = db.execute(select(Game))
+    games = result.scalars().all()
+
+    return games

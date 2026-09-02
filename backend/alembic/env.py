@@ -6,6 +6,10 @@ from alembic import context
 
 from app.database import Base
 from app.models.game import Game
+from app.models.genre import Genre
+from app.models.game_genre  import GameGenre
+from app.models.game_platform import GamePlatform
+from app.models.collection_item import CollectionItem
 
 from app.database import engine
 

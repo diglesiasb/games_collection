@@ -211,7 +211,7 @@ The project will be developed incrementally.
 * [x] Set up Git
 * [x] Connect project to GitHub
 * [x] Set up PostgreSQL with Docker Compose
-* [ ] Design database schema
+* [x] Design database schema
 * [ ] Create FastAPI backend
 * [ ] Connect FastAPI to PostgreSQL
 * [ ] Create `GET /api/games`
