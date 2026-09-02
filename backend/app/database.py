@@ -3,6 +3,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from sqlalchemy import URL, create_engine
+from sqlalchemy.orm import DeclarativeBase
 
 
 BASE_DIR = Path(__file__).resolve().parents[2]
@@ -21,3 +22,7 @@ DATABASE_URL = URL.create(
 
 
 engine = create_engine(DATABASE_URL)
+
+
+class Base(DeclarativeBase):
+    pass
