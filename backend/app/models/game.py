@@ -1,6 +1,8 @@
 from sqlalchemy import CheckConstraint, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from pydantic import BaseModel
+
 from ..database import Base
 from .game_genre import game_genre_table
 
