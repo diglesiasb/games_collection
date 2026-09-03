@@ -206,26 +206,77 @@ Docker will be used for services such as PostgreSQL and, where appropriate, othe
 
 The project will be developed incrementally.
 
+The project will be developed incrementally.
+
+### Foundation
+
 * [x] Create GitHub repository
-* [x] Set up React
 * [x] Set up Git
 * [x] Connect project to GitHub
+* [x] Set up React with Vite
 * [x] Set up PostgreSQL with Docker Compose
 * [x] Design database schema
-* [ ] Create FastAPI backend
-* [ ] Connect FastAPI to PostgreSQL
-* [ ] Create `GET /api/games`
+* [x] Set up SQLAlchemy models
+* [x] Set up Alembic migrations
+* [x] Create database tables
+* [x] Define model relationships
+* [x] Set up FastAPI backend
+* [x] Connect FastAPI to PostgreSQL
+
+### Backend API
+
+* [x] Create `GET /games`
+* [x] Create `POST /games`
+* [ ] Create `GET /games/{id}`
+* [ ] Implement game update
+* [ ] Implement game deletion
+* [ ] Add API validation and error handling
+* [ ] Add collection item endpoints
+* [ ] Add genre endpoints
+* [ ] Add platform endpoints
+
+### Frontend
+
 * [ ] Connect React to the API
-* [ ] Implement game CRUD
+* [ ] Implement game collection view
+* [ ] Implement game details view
+* [ ] Implement add/edit game
+* [ ] Implement collection item management
+* [ ] Implement game search and filtering
 * [ ] Implement responsive UI
-* [ ] Integrate external game information API
-* [ ] Add game search
+* [ ] Implement image cache management
+
+### External Game Data
+
+* [ ] Integrate OpenCritic API
+* [ ] Store external game identifiers
+* [ ] Retrieve game metadata automatically
+* [ ] Retrieve game cover images
+* [ ] Implement persistent image cache
+* [ ] Implement cache invalidation/cleanup
+* [ ] Implement collection import
+* [ ] Add support for bulk game metadata lookup
+
+### AI Assistant
+
 * [ ] Add AI assistant
 * [ ] Implement AI tool/function calling
+* [ ] Implement controlled game management tools
+* [ ] Implement natural language collection queries
+
+### Security & Deployment
+
 * [ ] Add authentication
 * [ ] Deploy to Raspberry Pi 4
 * [ ] Add remote access
 * [ ] Add automated database backups
+
+### Future Improvements
+
+* [ ] Add collection statistics
+* [ ] Add advanced filters
+* [ ] Improve mobile experience
+* [ ] Add additional external game data sources
 
 ---
 
