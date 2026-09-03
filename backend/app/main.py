@@ -1,4 +1,5 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
+
 from sqlalchemy import text, select
 from sqlalchemy.orm import Session
 
@@ -64,3 +65,16 @@ def create_game(game: GameCreate, db: Session = Depends(get_db)):
     db.refresh(new_game)
 
     return new_game
+
+
+@app.get("/games/{id_game}")
+def get_game(id_game: int, db: Session = Depends(get_db)):
+    game = db.get(Game, id_game)
+
+    if game is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Game not found"
+        )
+
+    return game
