@@ -1,4 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
+from fastapi.responses import FileResponse
+from pathlib import Path
 
 from sqlalchemy import text, select
 from sqlalchemy.orm import Session
@@ -16,6 +20,14 @@ def get_db():
 app = FastAPI(
     title="Games Collection API",
     version="0.1.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -78,3 +90,12 @@ def get_game(id_game: int, db: Session = Depends(get_db)):
         )
 
     return game
+
+@app.get("/games/{id_game}/image")
+def get_game_image(id_game: int):
+    image_path = Path(__file__).resolve().parents[1] / "cache" / "images" / f"{id_game}.jpg"
+
+    if not image_path.exists():
+        raise HTTPException(status_code=404, detail="Image not found")
+
+    return FileResponse(image_path)
