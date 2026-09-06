@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { getGames, getGame } from './services/gamesApi'
+import { getGames, getGame, deleteCollectionItem } from './services/gamesApi'
 
 import GameItem from './components/GameItem'
 import GameList from './components/GameList'
@@ -10,9 +10,24 @@ function App() {
   const [games, setGames] = useState([])
   const [selectedGame, setSelectedGame] = useState(null)
 
+  const handleBack = async () => {
+    const data = await getGames()
+    setGames(data)
+    setSelectedGame(null)
+  }
+
   const handleGameClick = async (idGame) => {
     const game = await getGame(idGame)
     setSelectedGame(game)
+  }
+
+  const handleDeleteCollectionItem = async (idCollectionItem) => {
+    await deleteCollectionItem(idCollectionItem)
+
+    if (selectedGame) {
+      const updatedGame = await getGame(selectedGame.id_game)
+      setSelectedGame(updatedGame)
+    }
   }
 
   useEffect(() => {
@@ -30,7 +45,9 @@ function App() {
       {selectedGame ? (
         <GameDetail
           game={selectedGame}
-          onBack={() => setSelectedGame(null)}
+          onBack={handleBack}
+          onGameUpdated={setSelectedGame}
+          onDeleteCollectionItem={handleDeleteCollectionItem}
         />
       ) : (
         <GameList

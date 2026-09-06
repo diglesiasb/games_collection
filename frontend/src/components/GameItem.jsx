@@ -25,6 +25,14 @@ function GameItem({ game, onClick }) {
                     <span>OpenCritic</span>
                     <strong>{game.opencritic_score ?? 'N/A'}</strong>
                 </div>
+
+                <div className="game-card-platforms">
+                    {game.platforms.map(platform => (
+                        <span key={platform.id_game_platform}>
+                            {platform.name}
+                        </span>
+                    ))}
+                </div>
             </div>
         </article>
     )
