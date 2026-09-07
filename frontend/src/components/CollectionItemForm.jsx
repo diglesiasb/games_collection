@@ -15,6 +15,45 @@ function CollectionItemForm({ item, onCancel, onSave }) {
 
     const [error, setError] = useState(null)
 
+    const validateForm = () => {
+        if (!formData.edition.trim()) {
+            return 'Edition is required'
+        }
+
+        if (!formData.release_date) {
+            return 'Release date is required'
+        }
+
+        if (formData.starting_date &&
+            formData.starting_date < formData.release_date) {
+            return 'Starting date cannot be before release date'
+        }
+
+        if (formData.finish_date &&
+            formData.finish_date < formData.release_date) {
+            return 'Finish date cannot be before release date'
+        }
+
+        if (formData.starting_date &&
+            formData.finish_date &&
+            formData.finish_date < formData.starting_date) {
+            return 'Finish date cannot be before starting date'
+        }
+
+        if (!formData.finished && formData.finish_date) {
+            return 'Finish date must be empty when finished is false'
+        }
+
+        if (
+            formData.total_hours !== '' &&
+            Number(formData.total_hours) < 0
+        ) {
+            return 'Total hours must be greater than or equal to 0'
+        }
+
+        return null
+    }
+
     const handleChange = (event) => {
         const { name, value, type, checked } = event.target
 
@@ -28,6 +67,13 @@ function CollectionItemForm({ item, onCancel, onSave }) {
         event.preventDefault()
 
         setError(null)
+
+        const validationError = validateForm()
+
+        if (validationError) {
+            setError(validationError)
+            return
+        }
 
         try {
             await onSave(formData)

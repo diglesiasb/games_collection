@@ -1,0 +1,77 @@
+.add-game {
+  max-width: 1000px;
+}
+
+.add-game-back {
+  margin-bottom: 20px;
+}
+
+.add-game-back button {
+  background: transparent;
+  border: 1px solid #444;
+  color: #bbbbbb;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-game-back button:hover {
+  background: #2a2a2a;
+  color: #ffffff;
+  border-color: #666;
+}
+
+.add-game h1 {
+  margin-bottom: 20px;
+}
+
+
+.add-game-section {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.add-game-section h2 {
+  margin: 0 0 20px;
+  font-size: 18px;
+}
+
+.add-game-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.add-game-row label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #999;
+  font-size: 12px;
+}
+
+.add-game-row input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px;
+  background: #121212;
+  border: 1px solid #444;
+  border-radius: 4px;
+  color: #ddd;
+  font-size: 13px;
+}
+
+.add-game-row input:focus {
+  outline: none;
+  border-color: #666;
+}
+
+@media (max-width: 600px) {
+  .add-game-row {
+    grid-template-columns: 1fr;
+  }
+}

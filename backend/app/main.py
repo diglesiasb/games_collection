@@ -12,9 +12,12 @@ from .database import engine
 from .models.game import Game
 from .models.game_platform import GamePlatform
 from .models.collection_item import CollectionItem
+from .models.genre import Genre
+from .models.game_genre import GameGenre
 
 from .schemas.game import (
     GameCreate,
+    GameGenreResponse,
     GameResponse,
     GameCollectionItemResponse,
     GameCollectionItemPlatform,
@@ -28,6 +31,10 @@ from .schemas.collection_item import (
     CollectionItemGame,
     CollectionItemPlatform
 )
+
+from .schemas.genre import GenreCreate, GenreResponse
+from .schemas.collection import CollectionCreate
+
 
 def get_db():
     with Session(engine) as session:
@@ -93,15 +100,24 @@ def get_games(db: Session = Depends(get_db)):
                     )
                 )
 
+        genres = [
+            GameGenreResponse(
+            id_genre=genre.id_genre,
+            genre=genre.genre
+            )
+            for genre in game.genres
+            ]
+
         result.append(
             GameResponse(
-                id_game=game.id_game,
-                title=game.title,
-                developer=game.developer,
-                publisher=game.publisher,
-                opencritic_score=game.opencritic_score,
-                platforms=platforms,
-                collection_items=[]
+            id_game=game.id_game,
+            title=game.title,
+            developer=game.developer,
+            publisher=game.publisher,
+            opencritic_score=game.opencritic_score,
+            genres=genres,
+            platforms=platforms,
+            collection_items=[]
             )
         )
 
@@ -145,11 +161,20 @@ def get_game(id_game: int, db: Session = Depends(get_db)):
                 )
             )
 
+    genres = [
+        GameGenreResponse(
+            id_genre=genre.id_genre,
+            genre=genre.genre
+        )
+        for genre in game.genres
+    ]
+
     return GameResponse(
         id_game=game.id_game,
         title=game.title,
         developer=game.developer,
         publisher=game.publisher,
+        genres=genres,
         opencritic_score=game.opencritic_score,
         platforms=platforms,
         collection_items=[
@@ -344,3 +369,70 @@ def delete_collection_item(
     db.commit()
 
     return {"message": "Collection item deleted"}
+
+@app.get("/genres", response_model=list[GenreResponse])
+def get_genres():
+    with Session(engine) as session:
+        genres = session.query(Genre).order_by(Genre.genre).all()
+        return genres
+
+
+@app.post("/genres", response_model=GenreResponse)
+def create_genre(data: GenreCreate):
+    with Session(engine) as session:
+        genre = Genre(
+            genre=data.genre
+        )
+
+        session.add(genre)
+        session.commit()
+        session.refresh(genre)
+
+        return genre
+
+
+@app.post("/collection")
+def create_collection(
+    collection: CollectionCreate,
+    db: Session = Depends(get_db)
+):
+    new_game = Game(
+        title=collection.title,
+        developer=collection.developer,
+        publisher=collection.publisher,
+        opencritic_score=collection.opencritic_score
+    )
+
+    db.add(new_game)
+    db.flush()
+
+    for id_genre in collection.genres:
+        game_genre = GameGenre(
+            id_game=new_game.id_game,
+            id_genre=id_genre
+        )
+
+        db.add(game_genre)
+
+    new_item = CollectionItem(
+        id_game=new_game.id_game,
+        id_game_platform=collection.id_game_platform,
+        edition=collection.edition,
+        type=collection.type,
+        release_date=collection.release_date,
+        purchase_date=collection.purchase_date,
+        starting_date=collection.starting_date,
+        finish_date=collection.finish_date,
+        finished=collection.finished,
+        total_hours=collection.total_hours
+    )
+
+    db.add(new_item)
+    db.commit()
+    db.refresh(new_game)
+    db.refresh(new_item)
+
+    return {
+        "game": new_game,
+        "collection_item": new_item
+    }

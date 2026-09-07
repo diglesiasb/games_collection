@@ -5,10 +5,12 @@ import { getGames, getGame, deleteCollectionItem } from './services/gamesApi'
 import GameItem from './components/GameItem'
 import GameList from './components/GameList'
 import GameDetail from './components/GameDetail'
+import AddGame from './components/AddGame'
 
 function App() {
   const [games, setGames] = useState([])
   const [selectedGame, setSelectedGame] = useState(null)
+  const [addingGame, setAddingGame] = useState(false)
 
   const handleBack = async () => {
     const data = await getGames()
@@ -42,12 +44,22 @@ function App() {
     <main className="app">
       <h1>Games Collection</h1>
 
-      {selectedGame ? (
+      {!selectedGame && !addingGame && (
+        <button onClick={() => setAddingGame(true)}>
+          + Add Game
+        </button>
+      )}
+
+      {addingGame ? (
+        <AddGame
+          onBack={() => setAddingGame(false)}
+        />
+      ) : selectedGame ? (
         <GameDetail
           game={selectedGame}
           onBack={handleBack}
-          onGameUpdated={setSelectedGame}
           onDeleteCollectionItem={handleDeleteCollectionItem}
+          onGameUpdated={setSelectedGame}
         />
       ) : (
         <GameList

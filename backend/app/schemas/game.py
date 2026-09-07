@@ -34,6 +34,9 @@ class GameCollectionItemResponse(BaseModel):
     finished: bool
     total_hours: int | None
 
+class GameGenreResponse(BaseModel):
+    id_genre: int
+    genre: str
 
 class GameResponse(BaseModel):
     id_game: int
@@ -43,3 +46,5 @@ class GameResponse(BaseModel):
     opencritic_score: int | None
     platforms: list[GamePlatformResponse]
     collection_items: list[GameCollectionItemResponse]
+    genres: list[GameGenreResponse]
+

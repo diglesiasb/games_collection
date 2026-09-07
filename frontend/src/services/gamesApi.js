@@ -57,3 +57,23 @@ export async function updateCollectionItem(idCollectionItem, data) {
 
   return await response.json()
 }
+
+export async function getGenres() {
+  const response = await fetch(`${API_URL}/genres`)
+
+  if (!response.ok) {
+    throw new Error('Error loading genres')
+  }
+
+  return await response.json()
+}
+
+export async function getPlatforms() {
+  const response = await fetch(`${API_URL}/platforms`)
+
+  if (!response.ok) {
+    throw new Error('Error loading platforms')
+  }
+
+  return await response.json()
+}
