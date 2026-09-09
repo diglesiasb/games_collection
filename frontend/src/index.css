@@ -8,3 +8,20 @@ body {
 .app {
   padding: 30px;
 }
+
+.app-addGame {
+  background: transparent;
+  border: 1px solid #444;
+  color: #bbbbbb;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.app-addGame:hover {
+  background: #2a2a2a;
+  color: #ffffff;
+  border-color: #666;
+}

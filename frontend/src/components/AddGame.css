@@ -1,9 +1,10 @@
 .add-game {
-  max-width: 1000px;
+  width: fit-content;
+  max-width: 100%;
 }
 
 .add-game-back {
-  margin-bottom: 20px;
+  margin-bottom: 5px;
 }
 
 .add-game-back button {
@@ -41,7 +42,7 @@
 
 .add-game-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: max-content max-content;
   gap: 15px;
   margin-bottom: 15px;
 }
@@ -54,9 +55,10 @@
   font-size: 12px;
 }
 
-.add-game-row input {
+.add-game-row input,
+.add-game-row select {
   box-sizing: border-box;
-  width: 100%;
+  width: 150px;
   padding: 8px;
   background: #121212;
   border: 1px solid #444;
@@ -65,7 +67,24 @@
   font-size: 13px;
 }
 
-.add-game-row input:focus {
+.add-game-input-title {
+  width: 310px !important;
+}
+
+
+
+.add-game-row input[type="date"],
+.add-game-row select {
+  max-width: 150px;
+}
+
+.add-game-row input[type="number"]
+ {
+  max-width: 70px;
+}
+
+.add-game-row input:focus,
+.add-game-row select:focus {
   outline: none;
   border-color: #666;
 }
@@ -74,4 +93,43 @@
   .add-game-row {
     grid-template-columns: 1fr;
   }
+}
+
+.add-game-genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-width: 350px;
+}
+
+.add-game-genres button {
+  background: transparent;
+  border: 1px solid #444;
+  border-radius: 4px;
+  padding: 5px 9px;
+  color: #999;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+
+
+.add-game-genres button.selected {
+  background: #2a2a2a;
+  color: #fff;
+  border-color: #888;
+}
+
+.add-game-section + .add-game-section {
+  margin-top: 10px;
+}
+
+.add-game-row input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.add-game-row input[type="number"]::-webkit-inner-spin-button,
+.add-game-row input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

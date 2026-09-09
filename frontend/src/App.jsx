@@ -45,7 +45,7 @@ function App() {
       <h1>Games Collection</h1>
 
       {!selectedGame && !addingGame && (
-        <button onClick={() => setAddingGame(true)}>
+        <button className="app-addGame" onClick={() => setAddingGame(true)}>
           + Add Game
         </button>
       )}
