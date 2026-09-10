@@ -1,3 +1,5 @@
+from sys import platform
+
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -34,6 +36,7 @@ from .schemas.collection_item import (
 
 from .schemas.genre import GenreCreate, GenreResponse
 from .schemas.collection import CollectionCreate
+from app.schemas import collection
 
 
 def get_db():
@@ -354,6 +357,17 @@ def create_genre(data: GenreCreate):
 
 @app.post("/collection")
 def create_collection(collection: CollectionCreate, db: Session = Depends(get_db)):
+
+    platform = db.get(GamePlatform, collection.id_game_platform)
+
+    if platform is None:
+        raise HTTPException(status_code=400, detail="Platform does not exist")
+
+    genres = db.query(Genre).filter(Genre.id_genre.in_(collection.genres)).all()
+
+    if len(genres) != len(collection.genres):
+        raise HTTPException(status_code=400,detail="One or more genres do not exist")
+
     new_game = Game(
         title=collection.title,
         developer=collection.developer,
