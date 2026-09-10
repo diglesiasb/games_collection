@@ -242,6 +242,16 @@ def delete_platform(id_game_platform: int, db: Session = Depends(get_db)):
     if platform is None:
         raise HTTPException(status_code=404, detail="Platform not found")
 
+    collection_items = db.query(CollectionItem).filter(
+        CollectionItem.id_game_platform == id_game_platform
+    ).first()
+
+    if collection_items is not None:
+        raise HTTPException(
+            status_code=400,
+            detail="Platform cannot be deleted because it is used by collection items"
+        )
+
     db.delete(platform)
     db.commit()
 
@@ -363,10 +373,12 @@ def create_collection(collection: CollectionCreate, db: Session = Depends(get_db
     if platform is None:
         raise HTTPException(status_code=400, detail="Platform does not exist")
 
-    genres = db.query(Genre).filter(Genre.id_genre.in_(collection.genres)).all()
+    requested_genres = set(collection.genres)
 
-    if len(genres) != len(collection.genres):
-        raise HTTPException(status_code=400,detail="One or more genres do not exist")
+    genres = db.query(Genre).filter(Genre.id_genre.in_(collection.genres)).all()
+    
+    if len(genres) != len(requested_genres):
+        raise HTTPException(status_code=400, detail="One or more genres do not exist")
 
     new_game = Game(
         title=collection.title,
@@ -378,7 +390,7 @@ def create_collection(collection: CollectionCreate, db: Session = Depends(get_db
     db.add(new_game)
     db.flush()
 
-    for id_genre in collection.genres:
+    for id_genre in requested_genres:
         game_genre = GameGenre(id_game=new_game.id_game, id_genre=id_genre)
 
         db.add(game_genre)
