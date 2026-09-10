@@ -1,35 +1,63 @@
-const API_URL = 'http://localhost:8000'
+const API_URL = "http://localhost:8000";
+
+//#region Games
 
 export async function getGames() {
-  const response = await fetch(`${API_URL}/games`)
+  const response = await fetch(`${API_URL}/games`);
 
   if (!response.ok) {
-    throw new Error('Error loading games')
+    throw new Error("Error loading games");
   }
 
-  return await response.json()
+  return await response.json();
 }
 
 export async function getGame(idGame) {
-  const response = await fetch(`${API_URL}/games/${idGame}`)
+  const response = await fetch(`${API_URL}/games/${idGame}`);
 
   if (!response.ok) {
-    throw new Error('Error loading game')
+    throw new Error("Error loading game");
   }
 
-  return await response.json()
+  return await response.json();
 }
+
+//#endregion
+
+//#region Collection
+
+export async function createCollection(data) {
+  const response = await fetch(`${API_URL}/collection`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+
+    throw new Error(error.detail?.[0]?.msg ?? "Error creating game");
+  }
+
+  return await response.json();
+}
+
+//#endregion
+
+//#region Collection Items
 
 export async function deleteCollectionItem(idCollectionItem) {
   const response = await fetch(
     `${API_URL}/collection-items/${idCollectionItem}`,
     {
-      method: 'DELETE'
-    }
-  )
+      method: "DELETE",
+    },
+  );
 
   if (!response.ok) {
-    throw new Error('Error deleting collection item')
+    throw new Error("Error deleting collection item");
   }
 }
 
@@ -37,43 +65,47 @@ export async function updateCollectionItem(idCollectionItem, data) {
   const response = await fetch(
     `${API_URL}/collection-items/${idCollectionItem}`,
     {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(data)
-    }
-  )
+      body: JSON.stringify(data),
+    },
+  );
 
   if (!response.ok) {
-    const error = await response.json()
+    const error = await response.json();
 
-    console.error('API ERROR:', error)
+    console.error("API ERROR:", error);
 
-    throw new Error(
-      error.detail?.[0]?.msg ?? 'Error updating collection item'
-    )
+    throw new Error(error.detail?.[0]?.msg ?? "Error updating collection item");
   }
 
-  return await response.json()
+  return await response.json();
 }
 
+//#endregion
+
+//#region Catalogs
+
 export async function getGenres() {
-  const response = await fetch(`${API_URL}/genres`)
+  const response = await fetch(`${API_URL}/genres`);
 
   if (!response.ok) {
-    throw new Error('Error loading genres')
+    throw new Error("Error loading genres");
   }
 
-  return await response.json()
+  return await response.json();
 }
 
 export async function getPlatforms() {
-  const response = await fetch(`${API_URL}/platforms`)
+  const response = await fetch(`${API_URL}/platforms`);
 
   if (!response.ok) {
-    throw new Error('Error loading platforms')
+    throw new Error("Error loading platforms");
   }
 
-  return await response.json()
+  return await response.json();
 }
+
+//#endregion

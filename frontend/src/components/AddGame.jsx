@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import './AddGame.css'
-import { getGenres, getPlatforms } from '../services/gamesApi'
+import { getGenres, getPlatforms, createCollection } from '../services/gamesApi'
 
-function AddGame({ onBack }) {
+function AddGame({ onBack, onGameCreated }) {
 
 
     const [genres, setGenres] = useState([])
@@ -21,6 +21,52 @@ function AddGame({ onBack }) {
     })
 
     const [errors, setErrors] = useState({})
+
+    const validateForm = () => {
+        if (!formData.title.trim()) {
+            setErrors({ title: 'Title is required' })
+            return false
+        }
+
+        if (!formData.developer.trim()) {
+            setErrors({ developer: 'Developer is required' })
+            return false
+        }
+
+        if (!formData.publisher.trim()) {
+            setErrors({ publisher: 'Publisher is required' })
+            return false
+        }
+
+        if (formData.opencritic_score !== '') {
+            const score = Number(formData.opencritic_score)
+
+            if (score < 0 || score > 100) {
+                setErrors({
+                    opencritic_score: 'Score must be between 0 and 100'
+                })
+                return false
+            }
+        }
+
+        if (!formData.id_game_platform) {
+            setErrors({ id_game_platform: 'Platform is required' })
+            return false
+        }
+
+        if (!formData.edition.trim()) {
+            setErrors({ edition: 'Edition is required' })
+            return false
+        }
+
+        if (!formData.release_date) {
+            setErrors({ release_date: 'Release date is required' })
+            return false
+        }
+
+        setErrors({})
+        return true
+    }
 
     const toggleGenre = (idGenre) => {
         setFormData(prev => ({
@@ -45,7 +91,35 @@ function AddGame({ onBack }) {
             [name]: value
         })
     }
-    
+
+    const handleSubmit = async () => {
+        if (!validateForm()) {
+            return
+        }
+
+        const data = {
+            ...formData,
+            opencritic_score:
+                formData.opencritic_score === ''
+                    ? null
+                    : Number(formData.opencritic_score),
+            id_game_platform: Number(formData.id_game_platform),
+            purchase_date:
+                formData.purchase_date === ''
+                    ? null
+                    : formData.purchase_date
+        }
+
+        try {
+            await createCollection(data)
+            onGameCreated()
+        } catch (error) {
+            setErrors({
+                submit: error.message
+            })
+        }
+    }
+
     return (
         <div className="add-game">
             <div className="add-game-back">
@@ -131,11 +205,9 @@ function AddGame({ onBack }) {
                     </label>
                 </div>
 
+                <div className="add-game-row">
+                </div>
 
-
-            </div>
-
-            <div className="add-game-section">
                 <h2>Collection Item</h2>
 
                 <div className="add-game-row">
@@ -206,6 +278,23 @@ function AddGame({ onBack }) {
                         />
                     </label>
                 </div>
+
+                <div className="add-game-actions">
+                    <button type="button" onClick={onBack}>
+                        Cancel
+                    </button>
+
+                    <button type="button" onClick={handleSubmit}>
+                        Add Game
+                    </button>
+                </div>
+
+                {Object.values(errors)[0] && (
+                    <div className="add-game-errors">
+                        {Object.values(errors)[0]}
+                    </div>
+                )}
+
             </div>
 
         </div>

@@ -32,6 +32,12 @@ function App() {
     }
   }
 
+  const handleGameCreated = async () => {
+    const data = await getGames()
+    setGames(data)
+    setAddingGame(false)
+  }
+
   useEffect(() => {
     getGames()
       .then(data => {
@@ -39,6 +45,8 @@ function App() {
         setGames(data)
       })
   }, [])
+
+
 
   return (
     <main className="app">
@@ -53,6 +61,7 @@ function App() {
       {addingGame ? (
         <AddGame
           onBack={() => setAddingGame(false)}
+          onGameCreated={handleGameCreated}
         />
       ) : selectedGame ? (
         <GameDetail

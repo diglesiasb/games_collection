@@ -27,7 +27,6 @@
   margin-bottom: 20px;
 }
 
-
 .add-game-section {
   background: #1e1e1e;
   border: 1px solid #333;
@@ -71,15 +70,12 @@
   width: 310px !important;
 }
 
-
-
 .add-game-row input[type="date"],
 .add-game-row select {
   max-width: 150px;
 }
 
-.add-game-row input[type="number"]
- {
+.add-game-row input[type="number"] {
   max-width: 70px;
 }
 
@@ -112,8 +108,6 @@
   cursor: pointer;
 }
 
-
-
 .add-game-genres button.selected {
   background: #2a2a2a;
   color: #fff;
@@ -132,4 +126,34 @@
 .add-game-row input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.add-game-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}
+
+.add-game-actions button {
+  background: transparent;
+  border: 1px solid #444;
+  color: #bbb;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.add-game-actions button:hover {
+  background: #2a2a2a;
+  color: #fff;
+  border-color: #666;
+}
+
+.add-game-errors {
+  margin-top: 15px;
+  color: #d66;
+  font-size: 12px;
+  line-height: 1.6;
 }
