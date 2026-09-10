@@ -34,7 +34,7 @@ from .schemas.collection_item import (
     CollectionItemPlatform,
 )
 
-from .schemas.genre import GenreCreate, GenreResponse
+from .schemas.genre import GenreCreate, GenreResponse, GenreUpdate
 from .schemas.collection import CollectionCreate
 from app.schemas import collection
 
@@ -363,6 +363,53 @@ def create_genre(data: GenreCreate):
         session.refresh(genre)
 
         return genre
+
+@app.put("/genres/{id_genre}")
+def update_genre(
+    id_genre: int,
+    genre_data: GenreUpdate,
+    db: Session = Depends(get_db)
+):
+    genre = db.get(Genre, id_genre)
+
+    if genre is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Genre not found"
+        )
+
+    genre.genre = genre_data.genre
+
+    db.commit()
+    db.refresh(genre)
+
+    return genre
+
+
+@app.delete("/genres/{id_genre}")
+def delete_genre(id_genre: int, db: Session = Depends(get_db)):
+    genre = db.get(Genre, id_genre)
+
+    if genre is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Genre not found"
+        )
+
+    game_genres = db.query(GameGenre).filter(
+        GameGenre.id_genre == id_genre
+    ).first()
+
+    if game_genres is not None:
+        raise HTTPException(
+            status_code=400,
+            detail="Genre cannot be deleted because it is used by games"
+        )
+
+    db.delete(genre)
+    db.commit()
+
+    return {"message": "Genre deleted"}
 
 
 @app.post("/collection")
