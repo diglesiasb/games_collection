@@ -1,6 +1,7 @@
 from sys import platform
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.middleware.cors import CORSMiddleware
 
 from fastapi.responses import FileResponse
@@ -19,6 +20,7 @@ from .models.game_genre import GameGenre
 
 from .schemas.game import (
     GameCreate,
+    GameUpdate,
     GameGenreResponse,
     GameResponse,
     GameCollectionItemResponse,
@@ -27,6 +29,7 @@ from .schemas.game import (
 )
 from .schemas.game_platform import GamePlatformCreate, GamePlatformUpdate
 from .schemas.collection_item import (
+    CollectionItemBase,
     CollectionItemCreate,
     CollectionItemUpdate,
     CollectionItemResponse,
@@ -44,7 +47,20 @@ def get_db():
         yield session
 
 
-app = FastAPI(title="Games Collection API", version="0.1.0")
+app = FastAPI(title="Games Collection API", version="0.1.0", docs_url=None)
+
+@app.get("/swagger-dark.css", include_in_schema=False)
+def swagger_dark_css():
+    return FileResponse("app/swagger-dark.css")
+
+
+@app.get("/docs", include_in_schema=False)
+def custom_swagger_ui_html():
+    return get_swagger_ui_html(
+        openapi_url=app.openapi_url,
+        title=f"{app.title} - Swagger UI",
+        swagger_css_url="/swagger-dark.css"
+    )
 
 app.add_middleware(
     CORSMiddleware,
@@ -187,6 +203,92 @@ def get_game(id_game: int, db: Session = Depends(get_db)):
     )
 
 
+@app.put("/games/{id_game}")
+def update_game(
+    id_game: int,
+    game_data: GameUpdate,
+    db: Session = Depends(get_db)
+):
+    game = db.get(Game, id_game)
+
+    if game is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Game not found"
+        )
+
+    requested_genres = set(game_data.genres)
+
+    genres = db.query(Genre).filter(
+        Genre.id_genre.in_(requested_genres)
+    ).all()
+
+    if len(genres) != len(requested_genres):
+        raise HTTPException(
+            status_code=400,
+            detail="One or more genres do not exist"
+        )
+
+    game.title = game_data.title
+    game.developer = game_data.developer
+    game.publisher = game_data.publisher
+    game.opencritic_score = game_data.opencritic_score
+
+    db.query(GameGenre).filter(
+        GameGenre.id_game == id_game
+    ).delete()
+
+    for id_genre in requested_genres:
+        game_genre = GameGenre(
+            id_game=id_game,
+            id_genre=id_genre
+        )
+        db.add(game_genre)
+
+    db.commit()
+    db.refresh(game)
+
+    return game
+
+
+@app.delete("/games/{id_game}")
+def delete_game(
+    id_game: int,
+    db: Session = Depends(get_db)
+):
+    game = db.get(Game, id_game)
+
+    if game is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Game not found"
+        )
+
+    db.query(GameGenre).filter(
+        GameGenre.id_game == id_game
+    ).delete()
+
+    db.query(CollectionItem).filter(
+        CollectionItem.id_game == id_game
+    ).delete()
+
+    db.delete(game)
+
+    db.commit()
+
+    image_path = (
+        Path(__file__).resolve().parents[1]
+        / "cache"
+        / "images"
+        / f"{id_game}.jpg"
+    )
+
+    if image_path.exists():
+        image_path.unlink()
+
+    return {"message": "Game deleted"}
+
+
 @app.get("/games/{id_game}/image")
 def get_game_image(id_game: int):
     image_path = (
@@ -197,6 +299,49 @@ def get_game_image(id_game: int):
         raise HTTPException(status_code=404, detail="Image not found")
 
     return FileResponse(image_path)
+
+
+@app.post("/games/{id_game}/collection-items")
+def create_game_collection_item(
+    id_game: int,
+    item: CollectionItemBase,
+    db: Session = Depends(get_db)
+):
+    game = db.get(Game, id_game)
+
+    if game is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Game not found"
+        )
+
+    platform = db.get(GamePlatform, item.id_game_platform)
+
+    if platform is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Platform does not exist"
+        )
+
+    new_item = CollectionItem(
+        id_game=id_game,
+        id_game_platform=item.id_game_platform,
+        edition=item.edition,
+        type=item.type,
+        release_date=item.release_date,
+        purchase_date=item.purchase_date,
+        starting_date=item.starting_date,
+        finish_date=item.finish_date,
+        finished=item.finished,
+        total_hours=item.total_hours,
+    )
+
+    db.add(new_item)
+    db.commit()
+    db.refresh(new_item)
+
+    return new_item
+
 
 
 @app.get("/platforms")
@@ -305,6 +450,9 @@ def create_collection_item(item: CollectionItemCreate, db: Session = Depends(get
     db.refresh(new_item)
 
     return new_item
+
+
+
 
 
 @app.put("/collection-items/{id_collection_item}")

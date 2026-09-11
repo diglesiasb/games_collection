@@ -85,3 +85,9 @@ class CollectionItemResponse(BaseModel):
     finish_date: date | None
     finished: bool
     total_hours: int | None
+
+class CollectionItemForGameCreate(CollectionItemBase):
+    pass
+
+class CollectionItemCreateForGame(CollectionItemBase):
+    pass

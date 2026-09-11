@@ -1,0 +1,119 @@
+@import url("https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/swagger-ui.css");
+
+html,
+body {
+    background: #121212;
+    color: #eeeeee;
+}
+
+.swagger-ui {
+    color: #eeeeee;
+}
+
+.swagger-ui .topbar {
+    background: #1e1e1e;
+}
+
+.swagger-ui .info .title,
+.swagger-ui .info p,
+.swagger-ui .info li,
+.swagger-ui .info table,
+.swagger-ui .info a {
+    color: #eeeeee;
+}
+
+.swagger-ui .scheme-container {
+    background: #1e1e1e;
+    box-shadow: none;
+}
+
+.swagger-ui .opblock-tag {
+    color: #eeeeee;
+    border-color: #444;
+}
+
+.swagger-ui .opblock {
+    background: #1e1e1e;
+    border-color: #444;
+}
+
+.swagger-ui .opblock .opblock-section-header {
+    background: #252525;
+    box-shadow: none;
+}
+
+.swagger-ui .opblock-summary-description,
+.swagger-ui .opblock-description-wrapper p,
+.swagger-ui .opblock-external-docs-wrapper p {
+    color: #cccccc;
+}
+
+.swagger-ui table thead tr td,
+.swagger-ui table thead tr th {
+    color: #eeeeee;
+    border-color: #444;
+}
+
+.swagger-ui .parameter__name,
+.swagger-ui .parameter__type,
+.swagger-ui label {
+    color: #dddddd;
+}
+
+.swagger-ui input[type=text],
+.swagger-ui input[type=password],
+.swagger-ui input[type=search],
+.swagger-ui textarea,
+.swagger-ui select {
+    background: #121212;
+    color: #eeeeee;
+    border-color: #555;
+}
+
+.swagger-ui .model {
+    color: #dddddd;
+}
+
+.swagger-ui section.models {
+    border-color: #444;
+}
+
+.swagger-ui section.models h4 {
+    color: #eeeeee;
+}
+
+.swagger-ui .model-title {
+    color: #eeeeee;
+}
+
+.swagger-ui .model-box {
+    background: #1e1e1e;
+}
+
+.swagger-ui .response-col_status,
+.swagger-ui .response-col_links {
+    color: #dddddd;
+}
+
+.swagger-ui .responses-inner h4,
+.swagger-ui .responses-inner h5 {
+    color: #eeeeee;
+}
+
+.swagger-ui .highlight-code {
+    background: #111111 !important;
+}
+
+.swagger-ui .microlight {
+    color: #eeeeee;
+}
+
+.swagger-ui .btn {
+    background: #1e1e1e;
+    color: #eeeeee;
+    border-color: #555;
+}
+
+.swagger-ui .btn:hover {
+    background: #2a2a2a;
+}

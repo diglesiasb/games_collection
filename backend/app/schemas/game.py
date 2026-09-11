@@ -14,6 +14,14 @@ class GameCreate(BaseModel):
     publisher: str
     opencritic_score: int | None = None
 
+
+class GameUpdate(BaseModel):
+    title: str
+    developer: str
+    publisher: str
+    opencritic_score: int | None = None
+    genres: list[int]
+
 class GameCollectionItemPlatform(BaseModel):
     id_game_platform: int
     name: str

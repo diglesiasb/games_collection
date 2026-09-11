@@ -2,13 +2,24 @@ import { useState } from 'react'
 import './GameDetail.css'
 import ConfirmModal from './ConfirmModal'
 import CollectionItemForm from './CollectionItemForm'
-import { updateCollectionItem, getGame } from '../services/gamesApi'
+import AddCollectionItemForm from './AddCollectionItemForm'
+import GameEditForm from './GameEditForm'
+import {
+    updateCollectionItem,
+    updateGame,
+    deleteGame,
+    createGameCollectionItem,
+    getGame
+} from '../services/gamesApi'
 
 function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
 
     const [showDeleteModal, setShowDeleteModal] = useState(false)
+    const [showDeleteGameModal, setShowDeleteGameModal] = useState(false)
     const [itemToDelete, setItemToDelete] = useState(null)
+    const [editingGame, setEditingGame] = useState(false)
     const [editingItem, setEditingItem] = useState(null)
+    const [addingCollectionItem, setAddingCollectionItem] = useState(false)
 
     return (
         <div className="game-detail">
@@ -27,27 +38,78 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                 </div>
 
                 <div className="game-detail-info">
-                    <h1>{game.title}</h1>
+                    {editingGame ? (
+                        <GameEditForm
+                            game={game}
+                            onCancel={() => setEditingGame(false)}
+                            onSave={async (data) => {
+                                await updateGame(game.id_game, data)
 
-                    <p className="game-detail-developer">
-                        <strong>Developer:</strong> {game.developer}
-                    </p>
+                                const updatedGame = await getGame(game.id_game)
 
-                    <p className="game-detail-publisher">
-                        <strong>Publisher:</strong> {game.publisher}
-                    </p>
+                                setEditingGame(false)
+                                onGameUpdated(updatedGame)
+                            }}
+                        />
+                    ) : (
+                        <>
+                            <h1>{game.title}</h1>
 
-                    <div className="game-detail-score">
-                        <span>OpenCritic</span>
-                        <strong>{game.opencritic_score ?? 'N/A'}</strong>
-                    </div>
+                            <p className="game-detail-developer">
+                                <strong>Developer:</strong> {game.developer}
+                            </p>
+
+                            <p className="game-detail-publisher">
+                                <strong>Publisher:</strong> {game.publisher}
+                            </p>
+
+                            <div className="game-detail-score">
+                                <span>OpenCritic Score:</span>
+                                <strong>{game.opencritic_score ?? 'N/A'}</strong>
+                            </div>
+
+                            <div className="game-detail-actions">
+                                <button onClick={() => setEditingGame(true)}>
+                                    Edit
+                                </button>
+
+                                <button onClick={() => setShowDeleteGameModal(true)}>
+                                    Delete
+                                </button>
+                            </div>
+                        </>
+                    )}
                 </div>
 
             </div>
 
 
 
-            {game.collection_items.length === 0 ? (
+            <div className="collection-items-header">
+                {!addingCollectionItem && (
+                    <button onClick={() => setAddingCollectionItem(true)}>
+                        + Add Collection Item
+                    </button>
+                )}
+            </div>
+
+            {addingCollectionItem ? (
+                <AddCollectionItemForm
+                    onCancel={() => setAddingCollectionItem(false)}
+                    onSave={async (data) => {
+                        await createGameCollectionItem(
+                            game.id_game,
+                            data
+                        )
+
+                        const updatedGame = await getGame(game.id_game)
+
+                        setAddingCollectionItem(false)
+
+                        onGameUpdated(updatedGame)
+                    }}
+                />
+            ) : game.collection_items.length === 0 ? (
                 <p>No collection items.</p>
             ) : (
                 <div className="collection-items">
@@ -188,6 +250,19 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
 
                     }
                 </div>
+            )}
+
+            {showDeleteGameModal && (
+                <ConfirmModal
+                    title="Delete game"
+                    message={`Are you sure you want to delete "${game.title}"? This will also delete all collection items associated with this game. This action cannot be undone.`}
+                    onCancel={() => setShowDeleteGameModal(false)}
+                    onConfirm={async () => {
+                        await deleteGame(game.id_game)
+                        setShowDeleteGameModal(false)
+                        onBack()
+                    }}
+                />
             )}
 
             {showDeleteModal && (

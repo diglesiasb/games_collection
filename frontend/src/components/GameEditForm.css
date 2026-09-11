@@ -1,0 +1,93 @@
+.game-edit-form {
+    width: 100%;
+}
+
+.game-edit-section {
+    max-width: 900px;
+}
+
+.game-edit-section h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.game-edit-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.game-edit-row label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-weight: bold;
+}
+
+.game-edit-row input {
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #1e1e1e;
+    color: #eeeeee;
+    font-size: 14px;
+}
+
+.game-edit-input-title {
+    width: 500px;
+}
+
+.game-edit-input-small {
+    width: 250px;
+}
+
+.game-edit-genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.game-edit-genres button {
+    padding: 7px 12px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #1e1e1e;
+    color: #cccccc;
+    cursor: pointer;
+}
+
+.game-edit-genres button:hover {
+    background: #2a2a2a;
+}
+
+.game-edit-genres button.selected {
+    background: #444;
+    border-color: #888;
+    color: #fff;
+}
+
+.game-edit-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+.game-edit-actions button {
+    padding: 9px 18px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #1e1e1e;
+    color: #eeeeee;
+    cursor: pointer;
+}
+
+.game-edit-actions button:hover {
+    background: #2a2a2a;
+}
+
+.game-edit-errors {
+    margin-top: 15px;
+    color: #ff6b6b;
+}

@@ -75,7 +75,7 @@
 }
 
 .collection-items {
-  margin-top: 15px;
+  
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 15px;
@@ -186,3 +186,53 @@
   color: #fff;
   border-color: #666;
 }
+
+.game-detail-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.game-detail-actions button {
+    padding: 9px 18px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #1e1e1e;
+    color: #eeeeee;
+    cursor: pointer;
+}
+
+.game-detail-actions button:hover {
+    background: #2a2a2a;
+}
+
+.collection-items-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.collection-items-header h2 {
+    margin: 0;
+}
+
+.collection-items-header button {
+    padding: 9px 18px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #1e1e1e;
+    color: #eeeeee;
+    cursor: pointer;
+}
+
+.collection-items-header button:hover {
+    background: #2a2a2a;
+}
+
+.add-collection-item-form {
+    width: 400px;
+}
+
