@@ -32,7 +32,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
 
                 <div className="game-detail-image">
                     <img
-                        src={`http://localhost:8000/games/${game.id_game}/image`}
+                        src={`http://192.168.0.54:8000/games/${game.id_game}/image`}
                         alt={game.title}
                     />
                 </div>
@@ -62,6 +62,18 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                             <p className="game-detail-publisher">
                                 <strong>Publisher:</strong> {game.publisher}
                             </p>
+
+                            <div className="game-detail-genres">
+                                <strong>Genres:</strong>
+
+                                <div className="game-detail-genre-tags">
+                                    {game.genres.map(genre => (
+                                        <span key={genre.id_genre}>
+                                            {genre.genre}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
 
                             <div className="game-detail-score">
                                 <span>OpenCritic Score:</span>
@@ -94,21 +106,23 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
             </div>
 
             {addingCollectionItem ? (
-                <AddCollectionItemForm
-                    onCancel={() => setAddingCollectionItem(false)}
-                    onSave={async (data) => {
-                        await createGameCollectionItem(
-                            game.id_game,
-                            data
-                        )
+                <div className="collection-items">
+                    <AddCollectionItemForm
+                        onCancel={() => setAddingCollectionItem(false)}
+                        onSave={async (data) => {
+                            await createGameCollectionItem(
+                                game.id_game,
+                                data
+                            )
 
-                        const updatedGame = await getGame(game.id_game)
+                            const updatedGame = await getGame(game.id_game)
 
-                        setAddingCollectionItem(false)
+                            setAddingCollectionItem(false)
 
-                        onGameUpdated(updatedGame)
-                    }}
-                />
+                            onGameUpdated(updatedGame)
+                        }}
+                    />
+                </div>
             ) : game.collection_items.length === 0 ? (
                 <p>No collection items.</p>
             ) : (

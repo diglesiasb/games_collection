@@ -5,66 +5,125 @@
   overflow: hidden;
   width: 100%;
   color: #eeeeee;
+  cursor: pointer;
+}
+
+.game-card:hover {
+  border-color: #555;
+  background: #222;
 }
 
 .game-card-image {
+  position: relative;
   aspect-ratio: 16 / 9;
   background: #2a2a2a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #888;
   overflow: hidden;
-}
-
-.game-card-content {
-  padding: 15px;
-}
-
-.game-card-content h2 {
-  margin: 0 0 8px;
-  font-size: 18px;
-}
-
-.game-card-developer,
-.game-card-publisher {
-  margin: 4px 0;
-  font-size: 14px;
-  color: #bbbbbb;
-}
-
-.game-card-developer {
-  font-weight: bold;
-}
-
-.game-card-score {
-  margin-top: 15px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.game-card-score strong {
-  font-size: 20px;
 }
 
 .game-card-image img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  display: block;
+}
+
+.game-card-score {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+
+  min-width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0 6px;
+  box-sizing: border-box;
+
+  border: 1px solid #555;
+  border-radius: 6px;
+
+  background: #1e1e1e;
+  color: #eeeeee;
+
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.game-card-content {
+  padding: 10px;
+}
+
+.game-card-content h2 {
+  margin: 0 0 4px;
+
+  font-size: 15px;
+  line-height: 1.2;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.game-card-developer {
+  margin: 0;
+
+  font-size: 12px;
+  color: #999;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .game-card-platforms {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
+  gap: 4px;
+
+  margin-top: 8px;
 }
 
 .game-card-platforms span {
-  padding: 3px 8px;
+  padding: 3px 6px;
+
   border: 1px solid #444;
   border-radius: 4px;
-  color: #999;
-  font-size: 12px;
+
+  color: #aaa;
+  font-size: 10px;
+}
+
+@media (max-width: 600px) {
+  .game-card-score {
+    min-width: 30px;
+    height: 30px;
+    font-size: 14px;
+    right: 6px;
+    bottom: 6px;
+    border-radius: 5px;
+  }
+  .game-card-finished {
+    width: 7px !important;
+    height: 7px !important;
+    top: 6px;
+    left: 6px;
+    border: 1px solid #1e1e1e;
+  }
+}
+
+.game-card-finished {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+
+  width: 12px;
+  height: 12px;
+
+  border-radius: 50%;
+
+  background: #4caf50;
+  border: 2px solid #1e1e1e;
 }

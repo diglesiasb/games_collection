@@ -11,6 +11,7 @@ function App() {
   const [games, setGames] = useState([])
   const [selectedGame, setSelectedGame] = useState(null)
   const [addingGame, setAddingGame] = useState(false)
+  const [showFilters, setShowFilters] = useState(false)
 
   const handleBack = async () => {
     const data = await getGames()
@@ -50,12 +51,32 @@ function App() {
 
   return (
     <main className="app">
-      <h1>Games Collection</h1>
+      <div className="app-header">
+        <h1>Games Collection</h1>
 
-      {!selectedGame && !addingGame && (
-        <button className="app-addGame" onClick={() => setAddingGame(true)}>
-          + Add Game
-        </button>
+        {!selectedGame && !addingGame && (
+          <div className="app-actions">
+            <button
+              className="app-addGame"
+              onClick={() => setAddingGame(true)}
+            >
+              + Add Game
+            </button>
+
+            <button
+              className="app-filter"
+              onClick={() => setShowFilters(!showFilters)}
+            >
+              🔍 Search / Filter
+            </button>
+          </div>
+        )}
+      </div>
+
+      {showFilters && !selectedGame && !addingGame && (
+        <div className="game-filters">
+          Search / Filter panel
+        </div>
       )}
 
       {addingGame ? (

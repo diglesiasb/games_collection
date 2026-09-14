@@ -1,11 +1,18 @@
 .collection-item-form {
-  background: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 8px;
-  padding: 18px;
-  box-sizing: border-box;
-}
 
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
+
+  background: #1e1e1e;
+
+  border: 1px solid #333;
+
+  border-radius: 8px;
+
+  padding: 18px;
+
+}
 .collection-item-form h3 {
   margin: 0 0 20px;
   font-size: 20px;
@@ -80,6 +87,11 @@
 }
 
 @media (max-width: 600px) {
+
+  .collection-item-form {
+    width: 100%;
+  }
+
   .collection-item-form-row {
     grid-template-columns: 1fr;
   }
@@ -87,6 +99,7 @@
   .collection-item-form-checkbox {
     padding-top: 0;
   }
+
 }
 
 .collection-item-form-error {

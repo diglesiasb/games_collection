@@ -145,22 +145,6 @@ function GameEditForm({ game, onCancel, onSave }) {
                 <div className="game-edit-row">
 
                     <label>
-                        OpenCritic Score
-                        <input
-                            type="number"
-                            name="opencritic_score"
-                            min="0"
-                            max="100"
-                            value={formData.opencritic_score}
-                            onChange={handleChange}
-                        />
-                    </label>
-
-                </div>
-
-                <div className="game-edit-row">
-
-                    <label>
                         Genres
 
                         <div className="game-edit-genres">
@@ -185,6 +169,24 @@ function GameEditForm({ game, onCancel, onSave }) {
                     </label>
 
                 </div>
+
+                <div className="game-edit-row">
+
+                    <label>
+                        OpenCritic Score
+                        <input
+                            type="number"
+                            name="opencritic_score"
+                            min="0"
+                            max="100"
+                            value={formData.opencritic_score}
+                            onChange={handleChange}
+                        />
+                    </label>
+
+                </div>
+
+                
 
                 <div className="game-edit-actions">
 

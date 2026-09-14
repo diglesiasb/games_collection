@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8000";
+const API_URL = "http://192.168.0.54:8000";
 
 //#region Games
 
@@ -23,70 +23,59 @@ export async function getGame(idGame) {
 }
 
 export async function updateGame(idGame, data) {
-    const response = await fetch(`${API_URL}/games/${idGame}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    })
+  const response = await fetch(`${API_URL}/games/${idGame}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 
-    if (!response.ok) {
-        const error = await response.json()
-        console.error('API ERROR:', error)
+  if (!response.ok) {
+    const error = await response.json();
+    console.error("API ERROR:", error);
 
-        throw new Error(
-            error.detail?.[0]?.msg ??
-            error.detail ??
-            'Error updating game'
-        )
-    }
+    throw new Error(
+      error.detail?.[0]?.msg ?? error.detail ?? "Error updating game",
+    );
+  }
 
-    return await response.json()
+  return await response.json();
 }
 
 export async function deleteGame(idGame) {
-    const response = await fetch(`${API_URL}/games/${idGame}`, {
-        method: 'DELETE'
-    })
+  const response = await fetch(`${API_URL}/games/${idGame}`, {
+    method: "DELETE",
+  });
 
-    if (!response.ok) {
-        const error = await response.json()
+  if (!response.ok) {
+    const error = await response.json();
 
-        throw new Error(
-            error.detail?.[0]?.msg ??
-            error.detail ??
-            'Error deleting game'
-        )
-    }
+    throw new Error(
+      error.detail?.[0]?.msg ?? error.detail ?? "Error deleting game",
+    );
+  }
 }
-
 
 export async function createGameCollectionItem(idGame, data) {
-    const response = await fetch(
-        `${API_URL}/games/${idGame}/collection-items`,
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        }
-    )
+  const response = await fetch(`${API_URL}/games/${idGame}/collection-items`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 
-    if (!response.ok) {
-        const error = await response.json()
+  if (!response.ok) {
+    const error = await response.json();
 
-        throw new Error(
-            error.detail?.[0]?.msg ??
-            error.detail ??
-            'Error adding collection item'
-        )
-    }
+    throw new Error(
+      error.detail?.[0]?.msg ?? error.detail ?? "Error adding collection item",
+    );
+  }
 
-    return await response.json()
+  return await response.json();
 }
-
 
 //#endregion
 

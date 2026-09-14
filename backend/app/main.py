@@ -49,6 +49,7 @@ def get_db():
 
 app = FastAPI(title="Games Collection API", version="0.1.0", docs_url=None)
 
+
 @app.get("/swagger-dark.css", include_in_schema=False)
 def swagger_dark_css():
     return FileResponse("app/swagger-dark.css")
@@ -59,12 +60,16 @@ def custom_swagger_ui_html():
     return get_swagger_ui_html(
         openapi_url=app.openapi_url,
         title=f"{app.title} - Swagger UI",
-        swagger_css_url="/swagger-dark.css"
+        swagger_css_url="/swagger-dark.css",
     )
+
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://192.168.0.54:5173",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -116,6 +121,25 @@ def get_games(db: Session = Depends(get_db)):
             for genre in game.genres
         ]
 
+        collection_items = [
+            GameCollectionItemResponse(
+                id_collection_item=item.id_collection_item,
+                platform=GameCollectionItemPlatform(
+                    id_game_platform=item.game_platform.id_game_platform,
+                    name=item.game_platform.name,
+                ),
+                edition=item.edition,
+                type=item.type,
+                release_date=item.release_date,
+                purchase_date=item.purchase_date,
+                starting_date=item.starting_date,
+                finish_date=item.finish_date,
+                finished=item.finished,
+                total_hours=item.total_hours,
+            )
+            for item in game.collection_items
+        ]
+
         result.append(
             GameResponse(
                 id_game=game.id_game,
@@ -125,7 +149,7 @@ def get_games(db: Session = Depends(get_db)):
                 opencritic_score=game.opencritic_score,
                 genres=genres,
                 platforms=platforms,
-                collection_items=[],
+                collection_items=collection_items,
             )
         )
 
@@ -204,45 +228,28 @@ def get_game(id_game: int, db: Session = Depends(get_db)):
 
 
 @app.put("/games/{id_game}")
-def update_game(
-    id_game: int,
-    game_data: GameUpdate,
-    db: Session = Depends(get_db)
-):
+def update_game(id_game: int, game_data: GameUpdate, db: Session = Depends(get_db)):
     game = db.get(Game, id_game)
 
     if game is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Game not found"
-        )
+        raise HTTPException(status_code=404, detail="Game not found")
 
     requested_genres = set(game_data.genres)
 
-    genres = db.query(Genre).filter(
-        Genre.id_genre.in_(requested_genres)
-    ).all()
+    genres = db.query(Genre).filter(Genre.id_genre.in_(requested_genres)).all()
 
     if len(genres) != len(requested_genres):
-        raise HTTPException(
-            status_code=400,
-            detail="One or more genres do not exist"
-        )
+        raise HTTPException(status_code=400, detail="One or more genres do not exist")
 
     game.title = game_data.title
     game.developer = game_data.developer
     game.publisher = game_data.publisher
     game.opencritic_score = game_data.opencritic_score
 
-    db.query(GameGenre).filter(
-        GameGenre.id_game == id_game
-    ).delete()
+    db.query(GameGenre).filter(GameGenre.id_game == id_game).delete()
 
     for id_genre in requested_genres:
-        game_genre = GameGenre(
-            id_game=id_game,
-            id_genre=id_genre
-        )
+        game_genre = GameGenre(id_game=id_game, id_genre=id_genre)
         db.add(game_genre)
 
     db.commit()
@@ -252,35 +259,22 @@ def update_game(
 
 
 @app.delete("/games/{id_game}")
-def delete_game(
-    id_game: int,
-    db: Session = Depends(get_db)
-):
+def delete_game(id_game: int, db: Session = Depends(get_db)):
     game = db.get(Game, id_game)
 
     if game is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Game not found"
-        )
+        raise HTTPException(status_code=404, detail="Game not found")
 
-    db.query(GameGenre).filter(
-        GameGenre.id_game == id_game
-    ).delete()
+    db.query(GameGenre).filter(GameGenre.id_game == id_game).delete()
 
-    db.query(CollectionItem).filter(
-        CollectionItem.id_game == id_game
-    ).delete()
+    db.query(CollectionItem).filter(CollectionItem.id_game == id_game).delete()
 
     db.delete(game)
 
     db.commit()
 
     image_path = (
-        Path(__file__).resolve().parents[1]
-        / "cache"
-        / "images"
-        / f"{id_game}.jpg"
+        Path(__file__).resolve().parents[1] / "cache" / "images" / f"{id_game}.jpg"
     )
 
     if image_path.exists():
@@ -303,25 +297,17 @@ def get_game_image(id_game: int):
 
 @app.post("/games/{id_game}/collection-items")
 def create_game_collection_item(
-    id_game: int,
-    item: CollectionItemBase,
-    db: Session = Depends(get_db)
+    id_game: int, item: CollectionItemBase, db: Session = Depends(get_db)
 ):
     game = db.get(Game, id_game)
 
     if game is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Game not found"
-        )
+        raise HTTPException(status_code=404, detail="Game not found")
 
     platform = db.get(GamePlatform, item.id_game_platform)
 
     if platform is None:
-        raise HTTPException(
-            status_code=400,
-            detail="Platform does not exist"
-        )
+        raise HTTPException(status_code=400, detail="Platform does not exist")
 
     new_item = CollectionItem(
         id_game=id_game,
@@ -341,7 +327,6 @@ def create_game_collection_item(
     db.refresh(new_item)
 
     return new_item
-
 
 
 @app.get("/platforms")
@@ -387,14 +372,16 @@ def delete_platform(id_game_platform: int, db: Session = Depends(get_db)):
     if platform is None:
         raise HTTPException(status_code=404, detail="Platform not found")
 
-    collection_items = db.query(CollectionItem).filter(
-        CollectionItem.id_game_platform == id_game_platform
-    ).first()
+    collection_items = (
+        db.query(CollectionItem)
+        .filter(CollectionItem.id_game_platform == id_game_platform)
+        .first()
+    )
 
     if collection_items is not None:
         raise HTTPException(
             status_code=400,
-            detail="Platform cannot be deleted because it is used by collection items"
+            detail="Platform cannot be deleted because it is used by collection items",
         )
 
     db.delete(platform)
@@ -450,9 +437,6 @@ def create_collection_item(item: CollectionItemCreate, db: Session = Depends(get
     db.refresh(new_item)
 
     return new_item
-
-
-
 
 
 @app.put("/collection-items/{id_collection_item}")
@@ -512,19 +496,13 @@ def create_genre(data: GenreCreate):
 
         return genre
 
+
 @app.put("/genres/{id_genre}")
-def update_genre(
-    id_genre: int,
-    genre_data: GenreUpdate,
-    db: Session = Depends(get_db)
-):
+def update_genre(id_genre: int, genre_data: GenreUpdate, db: Session = Depends(get_db)):
     genre = db.get(Genre, id_genre)
 
     if genre is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Genre not found"
-        )
+        raise HTTPException(status_code=404, detail="Genre not found")
 
     genre.genre = genre_data.genre
 
@@ -539,19 +517,14 @@ def delete_genre(id_genre: int, db: Session = Depends(get_db)):
     genre = db.get(Genre, id_genre)
 
     if genre is None:
-        raise HTTPException(
-            status_code=404,
-            detail="Genre not found"
-        )
+        raise HTTPException(status_code=404, detail="Genre not found")
 
-    game_genres = db.query(GameGenre).filter(
-        GameGenre.id_genre == id_genre
-    ).first()
+    game_genres = db.query(GameGenre).filter(GameGenre.id_genre == id_genre).first()
 
     if game_genres is not None:
         raise HTTPException(
             status_code=400,
-            detail="Genre cannot be deleted because it is used by games"
+            detail="Genre cannot be deleted because it is used by games",
         )
 
     db.delete(genre)
@@ -571,7 +544,7 @@ def create_collection(collection: CollectionCreate, db: Session = Depends(get_db
     requested_genres = set(collection.genres)
 
     genres = db.query(Genre).filter(Genre.id_genre.in_(collection.genres)).all()
-    
+
     if len(genres) != len(requested_genres):
         raise HTTPException(status_code=400, detail="One or more genres do not exist")
 

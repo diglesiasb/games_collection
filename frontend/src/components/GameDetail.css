@@ -52,7 +52,8 @@
 }
 
 .game-detail-developer,
-.game-detail-publisher {
+.game-detail-publisher,
+.game-detail-genres {
   margin: 8px 0;
   color: #bbbbbb;
 }
@@ -236,3 +237,24 @@
     width: 400px;
 }
 
+.game-detail-genres {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+   
+}
+
+.game-detail-genre-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.game-detail-genre-tags span {
+    padding: 4px 8px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background: #1e1e1e;
+    color: #ccc;
+    font-size: 12px;
+}

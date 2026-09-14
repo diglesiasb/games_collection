@@ -63,8 +63,8 @@
 }
 
 .game-edit-genres button.selected {
-    background: #444;
-    border-color: #888;
+    background: #2d5f8b;
+    border-color: #4a90c2;
     color: #fff;
 }
 
@@ -90,4 +90,22 @@
 .game-edit-errors {
     margin-top: 15px;
     color: #ff6b6b;
+}
+
+@media (max-width: 600px) {
+
+    .game-edit-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .game-edit-row input {
+        width: 100%;
+    }
+
+    .game-edit-input-title,
+    .game-edit-input-small {
+        width: 100%;
+    }
+
 }
