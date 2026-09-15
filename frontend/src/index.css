@@ -41,6 +41,10 @@ body {
     gap: 8px;
 }
 
+
+
+
+
 .app-filter {
     background: transparent;
     border: 1px solid #444;
@@ -79,4 +83,70 @@ body {
     .app-actions {
         flex-direction: column;
     }
+}
+
+.game-filters input {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 8px 10px;
+
+    background: #121212;
+    border: 1px solid #444;
+    border-radius: 4px;
+
+    color: #eeeeee;
+    font-size: 13px;
+}
+
+.game-filters input::placeholder {
+    color: #777;
+}
+
+.game-filters input:focus {
+    outline: none;
+    border-color: #666;
+}
+
+.game-filter-group {
+    margin-top: 15px;
+}
+
+.game-filter-group > span {
+    display: block;
+    margin-bottom: 8px;
+
+    color: #aaa;
+    font-size: 12px;
+}
+
+.game-filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.game-filter-options button {
+    padding: 5px 9px;
+
+    background: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 4px;
+
+    color: #aaa;
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.game-filter-options button:hover {
+    background: #2a2a2a;
+    border-color: #666;
+    color: #fff;
+}
+
+.game-filter-options button.selected {
+    background: #2d5f8b;
+    border-color: #4a90c2;
+    color: #fff;
 }
