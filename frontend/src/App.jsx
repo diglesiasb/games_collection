@@ -22,6 +22,13 @@ function App() {
   const [sortBy, setSortBy] = useState('title')
   const [sortDirection, setSortDirection] = useState('asc')
 
+  const clearFilters = () => {
+    setSearch('')
+    setPlatformFilter([])
+    setGenreFilter([])
+    setStatusFilter([])
+  }
+
   const togglePlatformFilter = (platform) => {
     setPlatformFilter(current =>
       current.includes(platform)
@@ -160,7 +167,11 @@ function App() {
       : -comparison
   })
 
-  const gameCount = visibleGames.length
+  const hasActiveFilters =
+    search !== '' ||
+    platformFilter.length > 0 ||
+    genreFilter.length > 0 ||
+    statusFilter.length > 0
 
   return (
     <main className="app">
@@ -247,6 +258,14 @@ function App() {
               ))}
             </div>
           </div>
+
+          {hasActiveFilters && (
+            <div className="game-filter-clear">
+              <button onClick={clearFilters}>
+                Clear filters
+              </button>
+            </div>
+          )}
 
           <div className="game-filter-group">
             <span>Sort:</span>

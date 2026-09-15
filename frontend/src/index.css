@@ -183,3 +183,27 @@ body {
     color: #888;
     font-size: 12px;
 }
+
+
+.game-filter-clear {
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid #333;
+}
+
+.game-filter-clear button {
+    padding: 0;
+
+    background: transparent;
+    border: none;
+
+    color: #777;
+    font-size: 14px;
+    text-decoration: underline;
+
+    cursor: pointer;
+}
+
+.game-filter-clear button:hover {
+    color: #fff;
+}
