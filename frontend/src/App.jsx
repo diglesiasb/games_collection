@@ -160,7 +160,7 @@ function App() {
       : -comparison
   })
 
-
+  const gameCount = visibleGames.length
 
   return (
     <main className="app">
@@ -269,6 +269,15 @@ function App() {
           </div>
 
         </div>
+      )}
+
+      {!selectedGame && !addingGame && (
+        <p className="game-count">
+          {visibleGames.length === 0
+            ? 'No games found'
+            : `${visibleGames.length} ${visibleGames.length === 1 ? 'Game' : 'Games'}`
+          }
+        </p>
       )}
 
       {addingGame ? (

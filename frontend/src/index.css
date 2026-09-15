@@ -176,3 +176,10 @@ body {
     border-color: #666;
     color: #fff;
 }
+
+.game-count {
+    margin: 0 0 15px;
+
+    color: #888;
+    font-size: 12px;
+}
