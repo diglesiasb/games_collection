@@ -1,0 +1,175 @@
+.app-addGame {
+  background: transparent;
+  border: 1px solid #444;
+  color: #bbbbbb;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.app-addGame:hover {
+  background: #2a2a2a;
+  color: #ffffff;
+  border-color: #666;
+}
+
+.app-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.app-filter {
+    background: transparent;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 6px 12px;
+    color: #aaa;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.app-filter:hover {
+    background: #2a2a2a;
+    color: #fff;
+    border-color: #666;
+}
+
+.game-filters {
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+
+    margin-bottom: 20px;
+    padding: 15px;
+
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 8px;
+}
+
+.game-filters input {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 8px 10px;
+
+    background: #121212;
+    border: 1px solid #444;
+    border-radius: 4px;
+
+    color: #eeeeee;
+    font-size: 13px;
+}
+
+.game-filters input::placeholder {
+    color: #777;
+}
+
+.game-filters input:focus {
+    outline: none;
+    border-color: #666;
+}
+
+.game-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 15px;
+}
+
+.game-filter-group > span {
+    display: block;
+    color: #aaa;
+    font-size: 12px;
+}
+
+.game-filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.game-filter-options button {
+    padding: 5px 9px;
+
+    background: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 4px;
+
+    color: #aaa;
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.game-filter-options button:hover {
+    background: #2a2a2a;
+    border-color: #666;
+    color: #fff;
+}
+
+.game-filter-options button.selected {
+    background: #2d5f8b;
+    border-color: #4a90c2;
+    color: #fff;
+}
+
+.game-filter-group select {
+    padding: 6px 8px;
+
+    background: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 4px;
+
+    color: #aaa;
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.game-filter-group select:focus {
+    outline: none;
+    border-color: #666;
+}
+
+.game-filter-group select:hover {
+    border-color: #666;
+    color: #fff;
+}
+
+.game-count {
+    margin: 0 0 15px;
+    color: #888;
+    font-size: 12px;
+}
+
+.game-filter-clear {
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid #333;
+}
+
+.game-filter-clear button {
+    padding: 0;
+
+    background: transparent;
+    border: none;
+
+    color: #777;
+    font-size: 14px;
+    text-decoration: underline;
+
+    cursor: pointer;
+}
+
+.game-filter-clear button:hover {
+    color: #fff;
+}
+
+@media (max-width: 600px) {
+    .app-actions {
+        flex-direction: column;
+    }
+}
