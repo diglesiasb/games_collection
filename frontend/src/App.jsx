@@ -14,9 +14,13 @@ function App() {
   const [showFilters, setShowFilters] = useState(false)
 
   const [search, setSearch] = useState('')
+
   const [platformFilter, setPlatformFilter] = useState([])
   const [genreFilter, setGenreFilter] = useState([])
   const [statusFilter, setStatusFilter] = useState([])
+
+  const [sortBy, setSortBy] = useState('title')
+  const [sortDirection, setSortDirection] = useState('asc')
 
   const togglePlatformFilter = (platform) => {
     setPlatformFilter(current =>
@@ -88,7 +92,7 @@ function App() {
     )
   )]
 
-  const visibleGames = games.filter(game => {
+  const filteredGames = games.filter(game => {
     const matchesSearch =
       game.title.toLowerCase().includes(search.toLowerCase())
 
@@ -121,6 +125,41 @@ function App() {
     )
   })
 
+  const visibleGames = [...filteredGames].sort((a, b) => {
+    let comparison = 0
+
+    if (sortBy === 'title') {
+      comparison = a.title.localeCompare(
+        b.title,
+        undefined,
+        { sensitivity: 'base' }
+      )
+    }
+
+    if (sortBy === 'score') {
+      const scoreA = a.opencritic_score ?? -1
+      const scoreB = b.opencritic_score ?? -1
+
+      comparison = scoreA - scoreB
+    }
+
+    if (sortBy === 'release_date') {
+      const dateA = a.collection_items
+        .map(item => item.release_date)
+        .sort()[0] ?? ''
+
+      const dateB = b.collection_items
+        .map(item => item.release_date)
+        .sort()[0] ?? ''
+
+      comparison = dateA.localeCompare(dateB)
+    }
+
+    return sortDirection === 'asc'
+      ? comparison
+      : -comparison
+  })
+
 
 
   return (
@@ -141,7 +180,7 @@ function App() {
               className="app-filter"
               onClick={() => setShowFilters(!showFilters)}
             >
-              🔍 Search / Filter
+              🔍 Search / Filter / Sort
             </button>
           </div>
         )}
@@ -207,6 +246,26 @@ function App() {
                 </button>
               ))}
             </div>
+          </div>
+
+          <div className="game-filter-group">
+            <span>Sort:</span>
+            <select
+              value={sortBy}
+              onChange={e => setSortBy(e.target.value)}
+            >
+              <option value="title">Title</option>
+              <option value="score">OpenCritic Score</option>
+              <option value="release_date">Release Date</option>
+            </select>
+
+            <select
+              value={sortDirection}
+              onChange={e => setSortDirection(e.target.value)}
+            >
+              <option value="asc">Ascending</option>
+              <option value="desc">Descending</option>
+            </select>
           </div>
 
         </div>

@@ -109,12 +109,15 @@ body {
 }
 
 .game-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     margin-top: 15px;
 }
 
 .game-filter-group > span {
     display: block;
-    margin-bottom: 8px;
+    
 
     color: #aaa;
     font-size: 12px;
@@ -148,5 +151,28 @@ body {
 .game-filter-options button.selected {
     background: #2d5f8b;
     border-color: #4a90c2;
+    color: #fff;
+}
+
+.game-filter-group select {
+    padding: 6px 8px;
+
+    background: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 4px;
+
+    color: #aaa;
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.game-filter-group select:focus {
+    outline: none;
+    border-color: #666;
+}
+
+.game-filter-group select:hover {
+    border-color: #666;
     color: #fff;
 }
