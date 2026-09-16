@@ -1,0 +1,99 @@
+.platforms {
+  max-width: 800px;
+}
+
+.platforms-back {
+  background: transparent;
+  border: 1px solid #444;
+  color: #bbbbbb;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+.platforms-back:hover {
+  background: #2a2a2a;
+  color: #ffffff;
+  border-color: #666;
+}
+
+
+.platforms-section {
+    max-width: 600px;
+    margin-top: 5px;
+}
+
+.platforms-section-header {
+    padding: 12px 14px;
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+
+    color: #eeeeee;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.platforms-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.platform-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 12px 14px;
+
+    background: #181818;
+    border: 1px solid #333;
+    border-top: none;
+
+    color: #eeeeee;
+}
+
+.platform-item:last-child {
+    border-radius: 0 0 6px 6px;
+}
+
+.platform-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.platform-name {
+    font-size: 15px;
+}
+
+.platform-release-date {
+    color: #888;
+    font-size: 13px;
+}
+
+.platform-delete {
+    background: transparent;
+    border: 1px solid #664444;
+    color: #cc8888;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.platform-delete:hover {
+    background: #3a2222;
+    color: #ffaaaa;
+    border-color: #885555;
+}
+
+.platform-item-count {
+    color: #bbbbbb;
+    font-size: 13px;
+    font-weight: bold;
+}

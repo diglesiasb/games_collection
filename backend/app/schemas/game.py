@@ -2,6 +2,8 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import date
 
+from .game_platform import GamePlatformSummary
+
 collection_items = relationship(
     "CollectionItem",
     back_populates="game"
@@ -23,10 +25,6 @@ class GameUpdate(BaseModel):
     genres: list[int]
 
 class GameCollectionItemPlatform(BaseModel):
-    id_game_platform: int
-    name: str
-
-class GamePlatformResponse(BaseModel):
     id_game_platform: int
     name: str
 
@@ -52,7 +50,7 @@ class GameResponse(BaseModel):
     developer: str
     publisher: str
     opencritic_score: int | None
-    platforms: list[GamePlatformResponse]
+    platforms: list[GamePlatformSummary]
     collection_items: list[GameCollectionItemResponse]
     genres: list[GameGenreResponse]
 

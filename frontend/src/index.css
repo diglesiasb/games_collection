@@ -11,8 +11,27 @@ body {
 
 .app-header {
     margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .app-header h1 {
-    margin: 0 0 15px;
+    margin: 0;
+}
+
+.app-settings {
+    background: none;
+    border: none;
+    color: #eeeeee;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.app-settings:hover {
+    color: #bbbbbb;
+    transform: rotate(45deg);
 }

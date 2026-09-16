@@ -24,10 +24,9 @@ from .schemas.game import (
     GameGenreResponse,
     GameResponse,
     GameCollectionItemResponse,
-    GameCollectionItemPlatform,
-    GamePlatformResponse,
+    GameCollectionItemPlatform
 )
-from .schemas.game_platform import GamePlatformCreate, GamePlatformUpdate
+from .schemas.game_platform import GamePlatformCreate, GamePlatformUpdate, GamePlatformResponse, GamePlatformSummary
 from .schemas.collection_item import (
     CollectionItemBase,
     CollectionItemCreate,
@@ -110,7 +109,7 @@ def get_games(db: Session = Depends(get_db)):
                 platform_ids.add(item.id_game_platform)
 
                 platforms.append(
-                    GamePlatformResponse(
+                    GamePlatformSummary(
                         id_game_platform=item.game_platform.id_game_platform,
                         name=item.game_platform.name,
                     )
@@ -187,7 +186,7 @@ def get_game(id_game: int, db: Session = Depends(get_db)):
             platform_ids.add(item.id_game_platform)
 
             platforms.append(
-                GamePlatformResponse(
+                GamePlatformSummary(
                     id_game_platform=item.game_platform.id_game_platform,
                     name=item.game_platform.name,
                 )
@@ -329,11 +328,25 @@ def create_game_collection_item(
     return new_item
 
 
-@app.get("/platforms")
+@app.get("/platforms", response_model=list[GamePlatformResponse])
 def get_platforms(db: Session = Depends(get_db)):
-    result = db.execute(select(GamePlatform).order_by(GamePlatform.name))
+
+    result = db.execute(
+        select(GamePlatform).order_by(GamePlatform.name)
+    )
+
     platforms = result.scalars().all()
-    return platforms
+
+    return [
+        GamePlatformResponse(
+            id_game_platform=platform.id_game_platform,
+            name=platform.name,
+            release_date=platform.release_date,
+            purchase_date=platform.purchase_date,
+            item_count=len(platform.collection_items)
+        )
+        for platform in platforms
+    ]
 
 
 @app.post("/platforms")
