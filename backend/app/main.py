@@ -351,7 +351,7 @@ def get_platforms(db: Session = Depends(get_db)):
 
 @app.post("/platforms")
 def create_platform(platform: GamePlatformCreate, db: Session = Depends(get_db)):
-    new_platform = GamePlatform(name=platform.name, release_date=platform.release_date)
+    new_platform = GamePlatform(name=platform.name, release_date=platform.release_date, purchase_date=platform.purchase_date)
 
     db.add(new_platform)
     db.commit()
@@ -371,6 +371,7 @@ def update_platform(
 
     existing_platform.name = platform.name
     existing_platform.release_date = platform.release_date
+    existing_platform.purchase_date = platform.purchase_date
 
     db.commit()
     db.refresh(existing_platform)

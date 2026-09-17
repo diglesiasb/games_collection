@@ -1,26 +1,170 @@
 .platforms {
-  max-width: 800px;
+    max-width: 800px;
 }
 
+.platforms-top-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.platforms-top-actions .platforms-back,
+.platforms-top-actions .platforms-add {
+    margin-bottom: 0;
+}
+
+/* Back */
+
 .platforms-back {
-  background: transparent;
-  border: 1px solid #444;
-  color: #bbbbbb;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-bottom: 25px;
+    background: transparent;
+    border: 1px solid #444;
+    color: #bbbbbb;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 25px;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .platforms-back:hover {
-  background: #2a2a2a;
-  color: #ffffff;
-  border-color: #666;
+   background: #303030;
+    border-color: #666;
 }
 
 
+/* Add Platform */
+
+.platforms-add {
+    background: transparent;
+    display: block;
+    border: 1px solid #444;
+    color: #bbbbbb;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 5px;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.platforms-add:hover {
+    background: #303030;
+    border-color: #666;
+}
+
+
+/* Forms */
+
+.platform-form,
+.platform-edit-form {
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
+    padding: 16px;
+    margin-bottom: 20px;
+    background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 6px;
+}
+
+
+/* Form fields */
+
+.platform-form-field {
+    margin-bottom: 12px;
+}
+
+.platform-form-field label,
+.platform-info label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    color: #999;
+    font-size: 12px;
+}
+
+.platform-form input,
+.platform-info input {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 8px 10px;
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 5px;
+    color: #eeeeee;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.platform-form input:focus,
+.platform-info input:focus {
+    background: #151515;
+    border-color: #777;
+}
+
+
+/* Form actions */
+
+.platform-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+
+/* Buttons */
+
+.platform-save,
+.platform-cancel,
+.platform-edit,
+.platform-delete {
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+
+/* Save */
+
+.platform-save {
+    background: #263a2b;
+    border: 1px solid #45634c;
+    color: #a9d5b1;
+}
+
+.platform-save:hover {
+    background: #304a36;
+    border-color: #587d60;
+    color: #c2e6c8;
+}
+
+
+/* Cancel */
+
+.platform-cancel {
+    background: transparent;
+    border: 1px solid #444;
+    color: #aaa;
+}
+
+.platform-cancel:hover {
+    background: #292929;
+    border-color: #666;
+    color: #eee;
+}
+
+
+/* Platforms section */
+
 .platforms-section {
+    width: 100%;
     max-width: 600px;
     margin-top: 5px;
 }
@@ -31,28 +175,31 @@
     border: 1px solid #333;
     border-bottom: none;
     border-radius: 6px 6px 0 0;
-
     color: #eeeeee;
     font-size: 16px;
     font-weight: bold;
 }
+
+
+/* Platform list */
 
 .platforms-list {
     display: flex;
     flex-direction: column;
 }
 
+
+/* Platform item */
+
 .platform-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+    gap: 15px;
     padding: 12px 14px;
-
     background: #181818;
     border: 1px solid #333;
     border-top: none;
-
     color: #eeeeee;
 }
 
@@ -60,10 +207,15 @@
     border-radius: 0 0 6px 6px;
 }
 
+
+/* Platform information */
+
 .platform-info {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 5px;
+    min-width: 0;
+    flex: 1;
 }
 
 .platform-name {
@@ -75,15 +227,34 @@
     font-size: 13px;
 }
 
+.platform-item-count {
+    color: #bbbbbb;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+
+/* Edit */
+
+.platform-edit {
+    background: transparent;
+    border: 1px solid #444;
+    color: #bbb;
+}
+
+.platform-edit:hover {
+    background: #292929;
+    border-color: #666;
+    color: #eee;
+}
+
+
+/* Delete */
+
 .platform-delete {
     background: transparent;
     border: 1px solid #664444;
     color: #cc8888;
-    padding: 6px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .platform-delete:hover {
@@ -92,8 +263,67 @@
     border-color: #885555;
 }
 
-.platform-item-count {
-    color: #bbbbbb;
+
+/* Normal row actions */
+
+.platform-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+
+/* Error */
+
+.platform-form-error {
+    padding: 9px 11px;
+    margin-top: 12px;
+    background: #321f1f;
+    border: 1px solid #633f3f;
+    border-radius: 5px;
+    color: #e7a5a5;
     font-size: 13px;
-    font-weight: bold;
+}
+
+
+/* Edit form */
+
+.platform-edit-form {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.platform-edit-form .platform-info {
+    width: 100%;
+}
+
+.platform-edit-form .platform-form-actions {
+    justify-content: flex-end;
+}
+
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+    .platforms {
+        width: 100%;
+    }
+
+    .platform-form,
+    .platform-edit-form,
+    .platforms-section {
+        max-width: 100%;
+    }
+
+    .platform-item {
+        align-items: stretch;
+    }
+
+    .platform-item-actions {
+        flex-direction: column;
+        justify-content: center;
+    }
+
 }

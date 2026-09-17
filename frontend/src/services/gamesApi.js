@@ -141,7 +141,7 @@ export async function updateCollectionItem(idCollectionItem, data) {
 
 //#endregion
 
-//#region Catalogs
+//#region Administration
 
 export async function getGenres() {
   const response = await fetch(`${API_URL}/genres`);
@@ -163,5 +163,59 @@ export async function getPlatforms() {
   return await response.json();
 }
 
+export async function deletePlatform(id) {
+    const response = await fetch(`${API_URL}/platforms/${id}`, {
+        method: 'DELETE'
+    })
+
+    if (!response.ok) {
+        throw new Error('Error deleting game platform')
+    }
+
+    return response.json()
+}
+
+export async function createPlatform(name, releaseDate, purchaseDate) {
+    const response = await fetch(`${API_URL}/platforms`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: name,
+            release_date: releaseDate,
+            purchase_date: purchaseDate || null
+        })
+    })
+
+    if (!response.ok) {
+        throw new Error('Error creating platform')
+    }
+
+    return response.json()
+}
+
+export async function updatePlatform(id, name, releaseDate, purchaseDate) {
+    const response = await fetch(`${API_URL}/platforms/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            name: name,
+            release_date: releaseDate,
+            purchase_date: purchaseDate || null
+        })
+    })
+
+    if (!response.ok) {
+        throw new Error('Error updating platform')
+    }
+
+    return response.json()
+}
+
 //#endregion
+
+
 
