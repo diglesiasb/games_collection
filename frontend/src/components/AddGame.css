@@ -34,6 +34,17 @@
   padding: 20px;
 }
 
+@media (max-width: 600px) {
+    .add-game {
+        width: 100%;
+    }
+
+    .add-game-section {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
 .add-game-section h2 {
   margin: 0 0 20px;
   font-size: 18px;
@@ -46,6 +57,7 @@
   margin-bottom: 15px;
 }
 
+
 .add-game-row label {
   display: flex;
   flex-direction: column;
@@ -57,7 +69,7 @@
 .add-game-row input,
 .add-game-row select {
   box-sizing: border-box;
-  width: 150px;
+  width: 200px;
   padding: 8px;
   background: #121212;
   border: 1px solid #444;
@@ -67,12 +79,25 @@
 }
 
 .add-game-input-title {
-  width: 310px !important;
+    width: 315px !important;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.add-game-h2-ci
+{
+  margin-top: 15px;
+}
+
+@media (max-width: 600px) {
+    .add-game-input-title {
+        width: 270px !important;        
+    }
 }
 
 .add-game-row input[type="date"],
 .add-game-row select {
-  max-width: 150px;
+  max-width: 200px;
 }
 
 .add-game-row input[type="number"] {
@@ -129,27 +154,46 @@
 }
 
 .add-game-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
-  justify-content: flex-end;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 14px;
 }
 
-.add-game-actions button {
-  background: transparent;
-  border: 1px solid #444;
-  color: #bbb;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
+.add-game-cancel,
+.add-game-save {
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
-.add-game-actions button:hover {
-  background: #2a2a2a;
-  color: #fff;
-  border-color: #666;
+.add-game-cancel {
+    background: transparent;
+    border: 1px solid #444;
+    color: #aaa;
 }
+
+.add-game-cancel:hover {
+    background: #292929;
+    border-color: #666;
+    color: #eee;
+}
+
+.add-game-save {
+    background: #263a2b;
+    border: 1px solid #45634c;
+    color: #a9d5b1;
+}
+
+.add-game-save:hover {
+    background: #304a36;
+    border-color: #587d60;
+    color: #c2e6c8;
+}
+
+
 
 .add-game-errors {
   margin-top: 15px;

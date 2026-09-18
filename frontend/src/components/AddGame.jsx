@@ -205,10 +205,8 @@ function AddGame({ onBack, onGameCreated }) {
                     </label>
                 </div>
 
-                <div className="add-game-row">
-                </div>
-
-                <h2>Collection Item</h2>
+                
+                <h2 className="add-game-h2-ci">Collection Item</h2>
 
                 <div className="add-game-row">
                     <label>
@@ -280,11 +278,19 @@ function AddGame({ onBack, onGameCreated }) {
                 </div>
 
                 <div className="add-game-actions">
-                    <button type="button" onClick={onBack}>
+                    <button
+                        type="button"
+                        className="add-game-cancel"
+                        onClick={onBack}
+                    >
                         Cancel
                     </button>
 
-                    <button type="button" onClick={handleSubmit}>
+                    <button
+                        type="button"
+                        className="add-game-save"
+                        onClick={handleSubmit}
+                    >
                         Add Game
                     </button>
                 </div>
