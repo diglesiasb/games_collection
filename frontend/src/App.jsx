@@ -3,6 +3,7 @@ import { useState } from 'react'
 import Collection from './components/Collection'
 import Administration from './components/Administration'
 import Platforms from './components/Platforms'
+import Genres from './components/Genres'
 
 function App() {
 
@@ -22,16 +23,19 @@ function App() {
             </div>
 
             {section === 'collection' ? (
-                <Collection
-                    onAdministration={() => setSection('administration')}
-                />
+                <Collection />
             ) : section === 'administration' ? (
                 <Administration
                     onBack={() => setSection('collection')}
                     onPlatforms={() => setSection('platforms')}
+                    onGenres={() => setSection('genres')}
+                />
+            ) : section === 'platforms' ? (
+                <Platforms
+                    onBack={() => setSection('administration')}
                 />
             ) : (
-                <Platforms
+                <Genres
                     onBack={() => setSection('administration')}
                 />
             )}

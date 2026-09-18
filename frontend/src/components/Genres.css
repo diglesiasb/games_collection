@@ -1,23 +1,21 @@
-.platforms {
+.genres {
     max-width: 800px;
 }
 
-.platforms-top-actions {
+.genres-top-actions {
     display: flex;
     align-items: center;
-    justify-content: flex-start; 
+    justify-content: flex-start;
     gap: 10px;
     margin-bottom: 15px;
 }
 
-.platforms-top-actions .platforms-back,
-.platforms-top-actions .platforms-add {
+.genres-back,
+.genres-add {
     margin-bottom: 0;
 }
 
-/* Back */
-
-.platforms-back {
+.genres-back {
     background: transparent;
     border: 1px solid #444;
     color: #bbbbbb;
@@ -25,41 +23,33 @@
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
-    margin-bottom: 25px;
     transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
-.platforms-back:hover {
-   background: #303030;
+.genres-back:hover {
+    background: #2a2a2a;
+    color: #ffffff;
     border-color: #666;
 }
 
-
-/* Add Platform */
-
-.platforms-add {
-    background: transparent;
-    display: block;
+.genres-add {
+    background: #252525;
     border: 1px solid #444;
-    color: #bbbbbb;
-    padding: 8px 14px;
+    color: #eeeeee;
+    padding: 9px 14px;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
-    margin-bottom: 5px;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
+    transition: background 0.2s, border-color 0.2s;
 }
 
-.platforms-add:hover {
+.genres-add:hover {
     background: #303030;
     border-color: #666;
 }
 
-
-/* Forms */
-
-.platform-form,
-.platform-edit-form {
+.genre-form,
+.genre-edit-form {
     width: 100%;
     max-width: 600px;
     box-sizing: border-box;
@@ -70,15 +60,12 @@
     border-radius: 6px;
 }
 
-
-/* Form fields */
-
-.platform-form-field {
+.genre-form-field {
     margin-bottom: 12px;
 }
 
-.platform-form-field label,
-.platform-info label {
+.genre-form-field label,
+.genre-info label {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -86,8 +73,8 @@
     font-size: 12px;
 }
 
-.platform-form input,
-.platform-info input {
+.genre-form input,
+.genre-info input {
     box-sizing: border-box;
     width: 100%;
     padding: 8px 10px;
@@ -100,29 +87,23 @@
     transition: border-color 0.2s, background 0.2s;
 }
 
-.platform-form input:focus,
-.platform-info input:focus {
+.genre-form input:focus,
+.genre-info input:focus {
     background: #151515;
     border-color: #777;
 }
 
-
-/* Form actions */
-
-.platform-form-actions {
+.genre-form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 8px;
     margin-top: 14px;
 }
 
-
-/* Buttons */
-
-.platform-save,
-.platform-cancel,
-.platform-edit,
-.platform-delete {
+.genre-save,
+.genre-cancel,
+.genre-edit,
+.genre-delete {
     padding: 6px 10px;
     border-radius: 5px;
     cursor: pointer;
@@ -130,46 +111,37 @@
     transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
-
-/* Save */
-
-.platform-save {
+.genre-save {
     background: #263a2b;
     border: 1px solid #45634c;
     color: #a9d5b1;
 }
 
-.platform-save:hover {
+.genre-save:hover {
     background: #304a36;
     border-color: #587d60;
     color: #c2e6c8;
 }
 
-
-/* Cancel */
-
-.platform-cancel {
+.genre-cancel {
     background: transparent;
     border: 1px solid #444;
     color: #aaa;
 }
 
-.platform-cancel:hover {
+.genre-cancel:hover {
     background: #292929;
     border-color: #666;
     color: #eee;
 }
 
-
-/* Platforms section */
-
-.platforms-section {
+.genres-section {
     width: 100%;
     max-width: 600px;
     margin-top: 5px;
 }
 
-.platforms-section-header {
+.genres-section-header {
     padding: 12px 14px;
     background: #1e1e1e;
     border: 1px solid #333;
@@ -180,18 +152,12 @@
     font-weight: bold;
 }
 
-
-/* Platform list */
-
-.platforms-list {
+.genres-list {
     display: flex;
     flex-direction: column;
 }
 
-
-/* Platform item */
-
-.platform-item {
+.genre-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -203,14 +169,11 @@
     color: #eeeeee;
 }
 
-.platform-item:last-child {
+.genre-item:last-child {
     border-radius: 0 0 6px 6px;
 }
 
-
-/* Platform information */
-
-.platform-info {
+.genre-info {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -218,65 +181,48 @@
     flex: 1;
 }
 
-.platform-name {
+.genre-name {
     font-size: 15px;
 }
 
-.platform-release-date {
-    color: #888;
-    font-size: 13px;
-}
-
-.platform-item-count {
+.genre-item-count {
     color: #bbbbbb;
     font-size: 13px;
     font-weight: bold;
 }
 
-
-/* Edit */
-
-.platform-edit {
+.genre-edit {
     background: transparent;
     border: 1px solid #444;
     color: #bbb;
 }
 
-.platform-edit:hover {
+.genre-edit:hover {
     background: #292929;
     border-color: #666;
     color: #eee;
 }
 
-
-/* Delete */
-
-.platform-delete {
+.genre-delete {
     background: transparent;
     border: 1px solid #664444;
     color: #cc8888;
 }
 
-.platform-delete:hover {
+.genre-delete:hover {
     background: #3a2222;
     color: #ffaaaa;
     border-color: #885555;
 }
 
-
-/* Normal row actions */
-
-.platform-item-actions {
+.genre-item-actions {
     display: flex;
     align-items: center;
     gap: 6px;
     flex-shrink: 0;
 }
 
-
-/* Error */
-
-.platform-form-error {
+.genre-form-error {
     padding: 9px 11px;
     margin-top: 12px;
     background: #321f1f;
@@ -286,50 +232,43 @@
     font-size: 13px;
 }
 
-
-/* Edit form */
-
-.platform-edit-form {
+.genre-edit-form {
     flex: 1;
     margin-bottom: 0;
 }
 
-.platform-edit-form .platform-info {
+.genre-edit-form .genre-info {
     width: 100%;
 }
 
-.platform-edit-form .platform-form-actions {
+.genre-edit-form .genre-form-actions {
     justify-content: flex-end;
 }
 
-
-/* Mobile */
-
 @media (max-width: 600px) {
-
-    .platforms {
+    .genres {
         width: 100%;
     }
 
-    .platform-form,
-    .platform-edit-form,
-    .platforms-section {
+    .genre-form,
+    .genre-edit-form,
+    .genres-section {
         max-width: 100%;
     }
 
-    .platform-item {
+    .genre-item {
         align-items: stretch;
     }
 
-    .platform-item-actions {
+    .genre-item-actions {
         flex-direction: column;
         justify-content: center;
     }
-
 }
 
-.platform-edit,
-.platform-delete {
+
+.genre-edit,
+.genre-delete {
     width: 55px;
     text-align: center;
 }

@@ -1,6 +1,6 @@
 import './Administration.css'
 
-function Administration({ onBack, onPlatforms }) {
+function Administration({ onBack, onPlatforms, onGenres }) {
     return (
         <div className="administration">
             <button
@@ -23,7 +23,7 @@ function Administration({ onBack, onPlatforms }) {
             </button>
             <button
                 className="administration-option"
-                onClick={() => console.log('Genres')}
+                onClick={onGenres}
             >
                 <span className="administration-option-title">
                     Genres

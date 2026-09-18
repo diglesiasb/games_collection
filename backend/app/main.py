@@ -24,9 +24,14 @@ from .schemas.game import (
     GameGenreResponse,
     GameResponse,
     GameCollectionItemResponse,
-    GameCollectionItemPlatform
+    GameCollectionItemPlatform,
 )
-from .schemas.game_platform import GamePlatformCreate, GamePlatformUpdate, GamePlatformResponse, GamePlatformSummary
+from .schemas.game_platform import (
+    GamePlatformCreate,
+    GamePlatformUpdate,
+    GamePlatformResponse,
+    GamePlatformSummary,
+)
 from .schemas.collection_item import (
     CollectionItemBase,
     CollectionItemCreate,
@@ -331,9 +336,7 @@ def create_game_collection_item(
 @app.get("/platforms", response_model=list[GamePlatformResponse])
 def get_platforms(db: Session = Depends(get_db)):
 
-    result = db.execute(
-        select(GamePlatform).order_by(GamePlatform.name)
-    )
+    result = db.execute(select(GamePlatform).order_by(GamePlatform.name))
 
     platforms = result.scalars().all()
 
@@ -343,7 +346,7 @@ def get_platforms(db: Session = Depends(get_db)):
             name=platform.name,
             release_date=platform.release_date,
             purchase_date=platform.purchase_date,
-            item_count=len(platform.collection_items)
+            item_count=len(platform.collection_items),
         )
         for platform in platforms
     ]
@@ -351,7 +354,11 @@ def get_platforms(db: Session = Depends(get_db)):
 
 @app.post("/platforms")
 def create_platform(platform: GamePlatformCreate, db: Session = Depends(get_db)):
-    new_platform = GamePlatform(name=platform.name, release_date=platform.release_date, purchase_date=platform.purchase_date)
+    new_platform = GamePlatform(
+        name=platform.name,
+        release_date=platform.release_date,
+        purchase_date=platform.purchase_date,
+    )
 
     db.add(new_platform)
     db.commit()
@@ -493,10 +500,17 @@ def delete_collection_item(id_collection_item: int, db: Session = Depends(get_db
 
 
 @app.get("/genres", response_model=list[GenreResponse])
-def get_genres():
-    with Session(engine) as session:
-        genres = session.query(Genre).order_by(Genre.genre).all()
-        return genres
+def get_genres(db: Session = Depends(get_db)):
+    result = db.execute(select(Genre).order_by(Genre.genre))
+
+    genres = result.scalars().all()
+
+    return [
+        GenreResponse(
+            id_genre=genre.id_genre, genre=genre.genre, game_count=len(genre.games)
+        )
+        for genre in genres
+    ]
 
 
 @app.post("/genres", response_model=GenreResponse)
@@ -508,7 +522,9 @@ def create_genre(data: GenreCreate):
         session.commit()
         session.refresh(genre)
 
-        return genre
+        return GenreResponse(
+            id_genre=genre.id_genre, genre=genre.genre, game_count=len(genre.games)
+        )
 
 
 @app.put("/genres/{id_genre}")

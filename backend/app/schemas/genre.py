@@ -12,3 +12,4 @@ class GenreUpdate(BaseModel):
 class GenreResponse(BaseModel):
     id_genre: int
     genre: str
+    game_count: int

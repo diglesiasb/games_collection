@@ -12,6 +12,9 @@ export async function getGames() {
   return await response.json();
 }
 
+/**
+ * @param {number} idGame
+ */
 export async function getGame(idGame) {
   const response = await fetch(`${API_URL}/games/${idGame}`);
 
@@ -144,14 +147,65 @@ export async function updateCollectionItem(idCollectionItem, data) {
 //#region Administration
 
 export async function getGenres() {
-  const response = await fetch(`${API_URL}/genres`);
+    const response = await fetch(`${API_URL}/genres`)
 
-  if (!response.ok) {
-    throw new Error("Error loading genres");
-  }
+    if (!response.ok) {
+        throw new Error('Error loading genres')
+    }
 
-  return await response.json();
+    return response.json()
 }
+
+export async function createGenre(genre) {
+    const response = await fetch(`${API_URL}/genres`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            genre: genre
+        })
+    })
+
+    if (!response.ok) {
+        throw new Error('Error creating genre')
+    }
+
+    return response.json()
+}
+
+
+export async function updateGenre(id, genre) {
+    const response = await fetch(`${API_URL}/genres/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            genre: genre
+        })
+    })
+
+    if (!response.ok) {
+        throw new Error('Error updating genre')
+    }
+
+    return response.json()
+}
+
+
+export async function deleteGenre(id) {
+    const response = await fetch(`${API_URL}/genres/${id}`, {
+        method: 'DELETE'
+    })
+
+    if (!response.ok) {
+        throw new Error('Error deleting genre')
+    }
+
+    return response.json()
+}
+
 
 export async function getPlatforms() {
   const response = await fetch(`${API_URL}/platforms`);
