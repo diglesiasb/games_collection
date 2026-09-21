@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -13,3 +14,5 @@ class GenreResponse(BaseModel):
     id_genre: int
     genre: str
     game_count: int
+    id_opencritic: int | None
+    opencritic_updated_at: datetime | None

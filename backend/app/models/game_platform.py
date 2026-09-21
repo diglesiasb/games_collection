@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from sqlalchemy import Date, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -21,7 +21,7 @@ class GamePlatform(Base):
 
     release_date: Mapped[date] = mapped_column(
         Date,
-        nullable=False
+        nullable=True
     )
 
     purchase_date: Mapped[date | None] = mapped_column(
@@ -29,7 +29,17 @@ class GamePlatform(Base):
         nullable=True
     )
 
+    id_opencritic: Mapped[int | None] = mapped_column(
+        nullable=True,
+        unique=True
+    )
+
+    opencritic_updated_at: Mapped[datetime | None] = mapped_column(
+        nullable=True
+    )
+
     collection_items = relationship(
         "CollectionItem",
         back_populates="game_platform"
     )
+

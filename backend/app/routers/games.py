@@ -90,6 +90,8 @@ def get_games(db: Session = Depends(get_db)):
                 genres=genres,
                 platforms=platforms,
                 collection_items=collection_items,
+                id_opencritic=game.id_opencritic,
+                opencritic_updated_at=game.opencritic_updated_at,
             )
         )
 
@@ -148,6 +150,8 @@ def get_game(id_game: int, db: Session = Depends(get_db)):
         publisher=game.publisher,
         genres=genres,
         opencritic_score=game.opencritic_score,
+        id_opencritic=game.id_opencritic,
+        opencritic_updated_at=game.opencritic_updated_at,
         platforms=platforms,
         collection_items=[
             GameCollectionItemResponse(

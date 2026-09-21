@@ -27,6 +27,8 @@ def get_genres(db: Session = Depends(get_db)):
             id_genre=genre.id_genre,
             genre=genre.genre,
             game_count=len(genre.games),
+            id_opencritic=genre.id_opencritic,
+            opencritic_updated_at=genre.opencritic_updated_at,
         )
         for genre in genres
     ]
@@ -45,6 +47,8 @@ def create_genre(data: GenreCreate):
             id_genre=genre.id_genre,
             genre=genre.genre,
             game_count=len(genre.games),
+            id_opencritic=genre.id_opencritic,
+            opencritic_updated_at=genre.opencritic_updated_at,
         )
 
 

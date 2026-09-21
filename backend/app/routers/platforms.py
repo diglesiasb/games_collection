@@ -33,6 +33,8 @@ def get_platforms(db: Session = Depends(get_db)):
             release_date=platform.release_date,
             purchase_date=platform.purchase_date,
             item_count=len(platform.collection_items),
+            id_opencritic=platform.id_opencritic,
+            opencritic_updated_at=platform.opencritic_updated_at,
         )
         for platform in platforms
     ]

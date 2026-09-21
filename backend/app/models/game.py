@@ -1,3 +1,5 @@
+from datetime import date, datetime
+
 from sqlalchemy import CheckConstraint, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -30,6 +32,15 @@ class Game(Base):
     )
 
     opencritic_score: Mapped[int | None] = mapped_column(
+        nullable=True
+    )
+
+    id_opencritic: Mapped[int | None] = mapped_column(
+        nullable=True,
+        unique=True
+    )
+        
+    opencritic_updated_at: Mapped[datetime | None] = mapped_column(
         nullable=True
     )
 

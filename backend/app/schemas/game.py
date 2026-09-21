@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import date
+from datetime import date, datetime
 
 from .game_platform import GamePlatformSummary
 
@@ -39,7 +39,7 @@ class GameCollectionItemResponse(BaseModel):
     finish_date: date | None
     finished: bool
     total_hours: int | None
-
+    
 class GameGenreResponse(BaseModel):
     id_genre: int
     genre: str
@@ -53,4 +53,6 @@ class GameResponse(BaseModel):
     platforms: list[GamePlatformSummary]
     collection_items: list[GameCollectionItemResponse]
     genres: list[GameGenreResponse]
+    id_opencritic: int | None
+    opencritic_updated_at: datetime | None
 
