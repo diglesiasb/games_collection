@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date
 
 from sqlalchemy import Date, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -32,10 +32,6 @@ class GamePlatform(Base):
     id_opencritic: Mapped[int | None] = mapped_column(
         nullable=True,
         unique=True
-    )
-
-    opencritic_updated_at: Mapped[datetime | None] = mapped_column(
-        nullable=True
     )
 
     collection_items = relationship(

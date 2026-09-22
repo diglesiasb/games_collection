@@ -9,6 +9,7 @@ from ..schemas.game_platform import (
     GamePlatformCreate,
     GamePlatformUpdate,
     GamePlatformResponse,
+    GamePlatformOpenCriticLink
 )
 
 
@@ -34,7 +35,6 @@ def get_platforms(db: Session = Depends(get_db)):
             purchase_date=platform.purchase_date,
             item_count=len(platform.collection_items),
             id_opencritic=platform.id_opencritic,
-            opencritic_updated_at=platform.opencritic_updated_at,
         )
         for platform in platforms
     ]
@@ -105,3 +105,58 @@ def delete_platform(
     db.commit()
 
     return {"message": "Platform deleted"}
+
+
+@router.post("/{id_game_platform}/link-opencritic")
+def link_opencritic_platform(
+    id_game_platform: int,
+    data: GamePlatformOpenCriticLink,
+    db: Session = Depends(get_db),
+):
+    platform = db.get(GamePlatform, id_game_platform)
+
+    if platform is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Platform not found",
+        )
+
+    existing_platform = db.execute(
+        select(GamePlatform).where(
+            GamePlatform.id_opencritic == data.id_opencritic,
+            GamePlatform.id_game_platform != id_game_platform,
+        )
+    ).scalar_one_or_none()
+
+    if existing_platform is not None:
+        raise HTTPException(
+            status_code=400,
+            detail="OpenCritic platform is already linked",
+        )
+
+    platform.id_opencritic = data.id_opencritic
+
+    db.commit()
+    db.refresh(platform)
+
+    return platform
+
+@router.post("/{id_game_platform}/unlink-opencritic")
+def unlink_opencritic_platform(
+    id_game_platform: int,
+    db: Session = Depends(get_db),
+):
+    platform = db.get(GamePlatform, id_game_platform)
+
+    if platform is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Platform not found",
+        )
+
+    platform.id_opencritic = None
+
+    db.commit()
+    db.refresh(platform)
+
+    return platform

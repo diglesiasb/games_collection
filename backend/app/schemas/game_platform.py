@@ -18,9 +18,11 @@ class GamePlatformResponse(BaseModel):
     release_date: date | None
     purchase_date: date | None
     id_opencritic: int | None
-    opencritic_updated_at: datetime | None
     item_count: int
 
 class GamePlatformSummary(BaseModel):
     id_game_platform: int
     name: str    
+
+class PlatformOpenCriticLink(BaseModel):
+    id_opencritic: int

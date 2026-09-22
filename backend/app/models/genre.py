@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -25,10 +23,6 @@ class Genre(Base):
         unique=True
     )
     
-    opencritic_updated_at: Mapped[datetime | None] = mapped_column(
-        nullable=True
-    )
-
     games = relationship(
         "Game",
         secondary=game_genre_table,
