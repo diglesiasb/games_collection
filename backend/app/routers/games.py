@@ -103,8 +103,7 @@ def create_game(game: GameCreate, db: Session = Depends(get_db)):
     new_game = Game(
         title=game.title,
         developer=game.developer,
-        publisher=game.publisher,
-        opencritic_score=game.opencritic_score,
+        publisher=game.publisher,        
     )
 
     db.add(new_game)
@@ -202,8 +201,7 @@ def update_game(
     game.title = game_data.title
     game.developer = game_data.developer
     game.publisher = game_data.publisher
-    game.opencritic_score = game_data.opencritic_score
-
+    
     db.query(GameGenre).filter(
         GameGenre.id_game == id_game
     ).delete()

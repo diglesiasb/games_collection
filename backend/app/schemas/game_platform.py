@@ -24,5 +24,5 @@ class GamePlatformSummary(BaseModel):
     id_game_platform: int
     name: str    
 
-class PlatformOpenCriticLink(BaseModel):
+class GamePlatformOpenCriticLink(BaseModel):
     id_opencritic: int

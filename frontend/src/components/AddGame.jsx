@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react'
 import './AddGame.css'
-import { getGenres, getPlatforms, createCollection } from '../services/gamesApi'
+import { getGenres, getPlatforms, createCollection, searchOpenCriticGames } from '../services/gamesApi'
 
 function AddGame({ onBack, onGameCreated }) {
+
+
+    const [showOpenCriticModal, setShowOpenCriticModal] = useState(false)
+    const [opencriticResults, setOpencriticResults] = useState([])
+    const [opencriticGame, setOpencriticGame] = useState(null)
+    const [opencriticLoading, setOpencriticLoading] = useState(false)
 
 
     const [genres, setGenres] = useState([])
@@ -26,27 +32,6 @@ function AddGame({ onBack, onGameCreated }) {
         if (!formData.title.trim()) {
             setErrors({ title: 'Title is required' })
             return false
-        }
-
-        if (!formData.developer.trim()) {
-            setErrors({ developer: 'Developer is required' })
-            return false
-        }
-
-        if (!formData.publisher.trim()) {
-            setErrors({ publisher: 'Publisher is required' })
-            return false
-        }
-
-        if (formData.opencritic_score !== '') {
-            const score = Number(formData.opencritic_score)
-
-            if (score < 0 || score > 100) {
-                setErrors({
-                    opencritic_score: 'Score must be between 0 and 100'
-                })
-                return false
-            }
         }
 
         if (!formData.id_game_platform) {
@@ -83,6 +68,18 @@ function AddGame({ onBack, onGameCreated }) {
         getPlatforms().then(setPlatforms)
     }, [])
 
+
+
+    const handleOpenCriticSearch = async () => {
+        try {
+            const results = await searchOpenCriticGames(formData.title)
+            console.log('OpenCritic results:', results)
+            setOpencriticResults(results)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     const handleChange = (event) => {
         const { name, value } = event.target
 
@@ -99,10 +96,6 @@ function AddGame({ onBack, onGameCreated }) {
 
         const data = {
             ...formData,
-            opencritic_score:
-                formData.opencritic_score === ''
-                    ? null
-                    : Number(formData.opencritic_score),
             id_game_platform: Number(formData.id_game_platform),
             purchase_date:
                 formData.purchase_date === ''
@@ -142,6 +135,13 @@ function AddGame({ onBack, onGameCreated }) {
                             onChange={handleChange}
                         />
                     </label>
+                    <button
+                        type="button"
+                        onClick={handleOpenCriticSearch}
+                    >
+                        Search OpenCritic
+                    </button>
+
                 </div>
 
                 <div className="add-game-row">
@@ -174,10 +174,8 @@ function AddGame({ onBack, onGameCreated }) {
                         <input
                             type="number"
                             name="opencritic_score"
-                            min="0"
-                            max="100"
                             value={formData.opencritic_score}
-                            onChange={handleChange}
+                            disabled
                         />
                     </label>
                 </div>
@@ -205,7 +203,7 @@ function AddGame({ onBack, onGameCreated }) {
                     </label>
                 </div>
 
-                
+
                 <h2 className="add-game-h2-ci">Collection Item</h2>
 
                 <div className="add-game-row">

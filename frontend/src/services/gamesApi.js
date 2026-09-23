@@ -271,5 +271,20 @@ export async function updatePlatform(id, name, releaseDate, purchaseDate) {
 
 //#endregion
 
+//#region OpenCritic
+
+export async function searchOpenCriticGames(criteria) {
+  const response = await fetch(
+    `${API_URL}/opencritic/games/search?criteria=${encodeURIComponent(criteria)}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Error searching OpenCritic games");
+  }
+
+  return await response.json();
+}
+
+//#endregion
 
 

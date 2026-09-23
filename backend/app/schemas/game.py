@@ -12,16 +12,14 @@ collection_items = relationship(
 
 class GameCreate(BaseModel):
     title: str
-    developer: str
-    publisher: str
-    opencritic_score: int | None = None
+    developer: str | None = None
+    publisher: str | None = None    
 
 
 class GameUpdate(BaseModel):
     title: str
-    developer: str
-    publisher: str
-    opencritic_score: int | None = None
+    developer: str | None = None
+    publisher: str | None = None  
     genres: list[int]
 
 class GameCollectionItemPlatform(BaseModel):
@@ -47,8 +45,8 @@ class GameGenreResponse(BaseModel):
 class GameResponse(BaseModel):
     id_game: int
     title: str
-    developer: str
-    publisher: str
+    developer: str | None
+    publisher: str | None
     opencritic_score: int | None
     platforms: list[GamePlatformSummary]
     collection_items: list[GameCollectionItemResponse]

@@ -23,12 +23,12 @@ class Game(Base):
 
     developer: Mapped[str] = mapped_column(
         String(255),
-        nullable=False
+        nullable=True
     )
 
     publisher: Mapped[str] = mapped_column(
         String(255),
-        nullable=False
+        nullable=True
     )
 
     opencritic_score: Mapped[int | None] = mapped_column(

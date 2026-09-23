@@ -35,14 +35,14 @@
 }
 
 @media (max-width: 600px) {
-    .add-game {
-        width: 100%;
-    }
+  .add-game {
+    width: 100%;
+  }
 
-    .add-game-section {
-        width: 100%;
-        box-sizing: border-box;
-    }
+  .add-game-section {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
 
 .add-game-section h2 {
@@ -56,7 +56,6 @@
   gap: 15px;
   margin-bottom: 15px;
 }
-
 
 .add-game-row label {
   display: flex;
@@ -79,20 +78,19 @@
 }
 
 .add-game-input-title {
-    width: 315px !important;
-    max-width: 100%;
-    box-sizing: border-box;
+  width: 315px !important;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
-.add-game-h2-ci
-{
+.add-game-h2-ci {
   margin-top: 15px;
 }
 
 @media (max-width: 600px) {
-    .add-game-input-title {
-        width: 270px !important;        
-    }
+  .add-game-input-title {
+    width: 270px !important;
+  }
 }
 
 .add-game-row input[type="date"],
@@ -134,9 +132,9 @@
 }
 
 .add-game-genres button.selected {
-  background: #2a2a2a;
+  background: #2d5f8b;
+  border-color: #4a90c2;
   color: #fff;
-  border-color: #888;
 }
 
 .add-game-section + .add-game-section {
@@ -154,46 +152,47 @@
 }
 
 .add-game-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-    margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
 }
 
 .add-game-cancel,
 .add-game-save {
-    padding: 6px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  padding: 6px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
 }
 
 .add-game-cancel {
-    background: transparent;
-    border: 1px solid #444;
-    color: #aaa;
+  background: transparent;
+  border: 1px solid #444;
+  color: #aaa;
 }
 
 .add-game-cancel:hover {
-    background: #292929;
-    border-color: #666;
-    color: #eee;
+  background: #292929;
+  border-color: #666;
+  color: #eee;
 }
 
 .add-game-save {
-    background: #263a2b;
-    border: 1px solid #45634c;
-    color: #a9d5b1;
+  background: #263a2b;
+  border: 1px solid #45634c;
+  color: #a9d5b1;
 }
 
 .add-game-save:hover {
-    background: #304a36;
-    border-color: #587d60;
-    color: #c2e6c8;
+  background: #304a36;
+  border-color: #587d60;
+  color: #c2e6c8;
 }
-
-
 
 .add-game-errors {
   margin-top: 15px;
