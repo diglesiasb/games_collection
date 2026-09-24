@@ -7,12 +7,20 @@ from datetime import datetime
 
 load_dotenv()
 
+USE_MOCK = os.getenv("OPENCRITIC_MOCK", "false").lower() == "true"
+
+print("OPENCRITIC_MOCK =", USE_MOCK)
 
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
 RAPIDAPI_HOST = os.getenv("RAPIDAPI_HOST")
 
 
 def search_games(criteria: str):
+
+    if USE_MOCK:
+        from .opencritic_mock import search_games as mock_search_games
+        return mock_search_games(criteria)
+
     if not RAPIDAPI_KEY:
         raise RuntimeError("RAPIDAPI_KEY is not configured")
 
@@ -38,6 +46,11 @@ def search_games(criteria: str):
     return response.json()
 
 def get_game(id_opencritic: int):
+
+    if USE_MOCK:
+        from .opencritic_mock import get_game as mock_get_game
+        return mock_get_game(id_opencritic)
+
     if not RAPIDAPI_KEY:
         raise RuntimeError("RAPIDAPI_KEY is not configured")
 

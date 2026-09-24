@@ -285,6 +285,18 @@ export async function searchOpenCriticGames(criteria) {
   return await response.json();
 }
 
+export async function getOpenCriticGame(idOpenCritic) {
+  const response = await fetch(
+    `${API_URL}/opencritic/games/${idOpenCritic}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Error loading OpenCritic game");
+  }
+
+  return await response.json();
+}
+
 //#endregion
 
 

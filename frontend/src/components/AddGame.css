@@ -200,3 +200,86 @@
   font-size: 12px;
   line-height: 1.6;
 }
+
+
+
+.opencritic-modal-overlay {
+    position: fixed;
+    inset: 0;
+
+    background: rgba(0, 0, 0, 0.7);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 1000;
+}
+
+.opencritic-modal {
+    background: #1e1e1e;
+    color: #f0f0f0;
+
+    width: 500px;
+    max-width: 90%;
+    max-height: 80vh;
+
+    padding: 24px;
+    border-radius: 8px;
+
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.opencritic-modal h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.opencritic-results {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.opencritic-result {
+    width: 100%;
+    padding: 12px 14px;
+
+    background: #2a2a2a;
+    color: #f0f0f0;
+
+    border: 1px solid #444;
+    border-radius: 6px;
+
+    text-align: left;
+    font-size: 15px;
+
+    cursor: pointer;
+}
+
+.opencritic-result:hover {
+    background: #353535;
+}
+
+.opencritic-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.opencritic-modal-actions button {
+    padding: 8px 18px;
+
+    background: #2a2a2a;
+    color: #f0f0f0;
+
+    border: 1px solid #555;
+    border-radius: 6px;
+
+    cursor: pointer;
+}
+
+.opencritic-modal-actions button:hover {
+    background: #353535;
+}

@@ -1,6 +1,7 @@
+// @ts-nocheck
 import { useEffect, useState } from 'react'
 import './AddGame.css'
-import { getGenres, getPlatforms, createCollection, searchOpenCriticGames } from '../services/gamesApi'
+import { getGenres, getPlatforms, createCollection, searchOpenCriticGames, getOpenCriticGame } from '../services/gamesApi'
 
 function AddGame({ onBack, onGameCreated }) {
 
@@ -8,7 +9,7 @@ function AddGame({ onBack, onGameCreated }) {
     const [showOpenCriticModal, setShowOpenCriticModal] = useState(false)
     const [opencriticResults, setOpencriticResults] = useState([])
     const [opencriticGame, setOpencriticGame] = useState(null)
-    const [opencriticLoading, setOpencriticLoading] = useState(false)
+    const [selectedOpencriticPlatform, setSelectedOpencriticPlatform] = useState(null)
 
 
     const [genres, setGenres] = useState([])
@@ -73,8 +74,18 @@ function AddGame({ onBack, onGameCreated }) {
     const handleOpenCriticSearch = async () => {
         try {
             const results = await searchOpenCriticGames(formData.title)
-            console.log('OpenCritic results:', results)
+
             setOpencriticResults(results)
+            setShowOpenCriticModal(true)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const handleOpenCriticSelect = async (idOpenCritic) => {
+        try {
+            const game = await getOpenCriticGame(idOpenCritic)
+            setOpencriticGame(game)
         } catch (error) {
             console.error(error)
         }
@@ -301,6 +312,108 @@ function AddGame({ onBack, onGameCreated }) {
 
             </div>
 
+            {showOpenCriticModal && (
+                <div className="opencritic-modal-overlay">
+                    <div className="opencritic-modal">
+
+                        {!opencriticGame ? (
+                            <>
+                                <div className="opencritic-results">
+                                    {opencriticResults.slice(0, 5).map(game => (
+                                        <button
+                                            type="button"
+                                            key={game.id}
+                                            className="opencritic-result"
+                                            onClick={() => handleOpenCriticSelect(game.id)}
+                                        >
+                                            {game.name}
+                                        </button>
+                                    ))}
+                                </div>
+
+                                <div className="opencritic-modal-actions">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowOpenCriticModal(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="opencritic-game-details">
+
+                                    <h3>{opencriticGame.title}</h3>
+
+                                    <p>
+                                        Developer: {opencriticGame.developer}
+                                    </p>
+
+                                    <p>
+                                        Publisher: {opencriticGame.publisher}
+                                    </p>
+
+                                    <p>
+                                        OpenCritic Score: {opencriticGame.opencritic_score}
+                                    </p>
+
+                                    <h4>Platform</h4>
+
+                                    <div className="opencritic-platforms">
+                                        {opencriticGame.platforms.map(platform => (
+                                            <label key={platform.id_opencritic}>
+                                                <input
+                                                    type="radio"
+                                                    name="opencritic-platform"
+                                                    value={platform.id_opencritic}
+                                                    checked={
+                                                        selectedOpencriticPlatform ===
+                                                        platform.id_opencritic
+                                                    }
+                                                    onChange={() =>
+                                                        setSelectedOpencriticPlatform(
+                                                            platform.id_opencritic
+                                                        )
+                                                    }
+                                                />
+
+                                                {platform.name}
+                                            </label>
+                                        ))}
+                                    </div>
+
+                                </div>
+
+                                <div className="opencritic-modal-actions">
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setOpencriticGame(null)
+                                            setSelectedOpencriticPlatform(null)
+                                        }}
+                                    >
+                                        Cancel
+                                    </button>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            // TODO: aceptar juego OpenCritic
+                                        }}
+                                    >
+                                        Accept
+                                    </button>
+
+                                </div>
+                            </>
+                        )}
+
+                    </div>
+                </div>
+            )}
+            
         </div>
     )
 }
