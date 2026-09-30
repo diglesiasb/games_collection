@@ -74,6 +74,9 @@ def get_game(id_opencritic: int):
 
     return response.json()
 
+
+IMAGE_SIZES = ["xl", "lg", "md", "sm", "xs", "og"]
+
 def parse_game(data: dict):
     developer = None
     publisher = None
@@ -108,14 +111,29 @@ def parse_game(data: dict):
         for platform in data.get("Platforms", [])
     ]
 
+    
+    score = data.get("medianScore")
+    if score == -1:
+        score = None
+
+
+    images = data.get("images") or {}
+    masthead = images.get("masthead") or {}
+    image = None
+    for size in IMAGE_SIZES:
+        if masthead.get(size):
+            image = masthead[size]
+            break
+
     return {
         "id_opencritic": data.get("id"),
         "title": data.get("name"),
         "developer": developer,
         "publisher": publisher,
-        "opencritic_score": data.get("medianScore"),
+        "opencritic_score": score,
         "genres": genres,
         "platforms": platforms,
+        "image": image,
     }
 
 def get_platforms():

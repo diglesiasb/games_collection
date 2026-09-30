@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
+from datetime import datetime, timezone
 
 from ..database import engine
 from ..models.game import Game
@@ -175,6 +176,12 @@ def create_collection(
         developer=collection.developer,
         publisher=collection.publisher,
         opencritic_score=collection.opencritic_score,
+        id_opencritic=collection.id_opencritic,
+        opencritic_updated_at=(
+            datetime.now(timezone.utc)
+            if collection.id_opencritic is not None
+            else None
+        ),  
     )
 
     db.add(new_game)

@@ -1,27 +1,72 @@
 [
   {
     "id": 463,
-    "name": "The Witcher 3",
-    "dist": 0.45454544
+    "name": "The Witcher 3: Wild Hunt",
+    "dist": 0.10
   },
   {
-    "id": 20145,
-    "name": "Reigns: The Witcher",
-    "dist": 0.57894737
+    "id": 12345,
+    "name": "Score Minus One",
+    "dist": 0.20
   },
   {
-    "id": 10543,
-    "name": "Witch It",
-    "dist": 0.5833334
+    "id": 12346,
+    "name": "Score Null",
+    "dist": 0.30
   },
   {
-    "id": 2648,
-    "name": "Witch & Hero 2",
-    "dist": 0.6
+    "id": 12347,
+    "name": "No Genres",
+    "dist": 0.40
   },
   {
-    "id": 15601,
-    "name": "Witchfire",
-    "dist": 0.6153844
-  }  
+    "id": 12348,
+    "name": "No Developer",
+    "dist": 0.50
+  },
+  {
+    "id": 12349,
+    "name": "No Publisher",
+    "dist": 0.60
+  },
+  {
+    "id": 12350,
+    "name": "No Companies",
+    "dist": 0.70
+  },
+  {
+    "id": 12351,
+    "name": "No Platforms",
+    "dist": 0.80
+  },
+  {
+    "id": 12352,
+    "name": "Platforms Without Release Date",
+    "dist": 0.90
+  },
+  {
+    "id": 12353,
+    "name": "Masthead Partial",
+    "dist": 1.00
+  },
+  {
+    "id": 12354,
+    "name": "Masthead Only Small",
+    "dist": 1.10
+  },
+  {
+    "id": 12355,
+    "name": "No Masthead",
+    "dist": 1.20
+  },
+  {
+    "id": 12356,
+    "name": "No Images",
+    "dist": 1.30
+  },
+  {
+    "id": 12357,
+    "name": "Minimal Game",
+    "dist": 1.40
+  }
 ]
