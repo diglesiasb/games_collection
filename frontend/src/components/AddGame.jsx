@@ -85,6 +85,9 @@ function AddGame({ onBack, onGameCreated }) {
     const handleOpenCriticSelect = async (idOpenCritic) => {
         try {
             const game = await getOpenCriticGame(idOpenCritic)
+
+            console.log('OpenCritic game:', game)
+
             setOpencriticGame(game)
         } catch (error) {
             console.error(error)
@@ -413,7 +416,7 @@ function AddGame({ onBack, onGameCreated }) {
                     </div>
                 </div>
             )}
-            
+
         </div>
     )
 }

@@ -113,6 +113,9 @@ def delete_genre(
 def sync_opencritic_genres(
     db: Session = Depends(get_db),
 ):
-    sync_genres(db)
+    added = sync_genres(db)
 
-    return {"message": "Genres synchronized with OpenCritic"}
+    return {
+        "message": "Genres synchronized with OpenCritic",
+        "added": added,
+    }

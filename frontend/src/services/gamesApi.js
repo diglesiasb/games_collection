@@ -147,65 +147,62 @@ export async function updateCollectionItem(idCollectionItem, data) {
 //#region Administration
 
 export async function getGenres() {
-    const response = await fetch(`${API_URL}/genres`)
+  const response = await fetch(`${API_URL}/genres`);
 
-    if (!response.ok) {
-        throw new Error('Error loading genres')
-    }
+  if (!response.ok) {
+    throw new Error("Error loading genres");
+  }
 
-    return response.json()
+  return response.json();
 }
 
 export async function createGenre(genre) {
-    const response = await fetch(`${API_URL}/genres`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            genre: genre
-        })
-    })
+  const response = await fetch(`${API_URL}/genres`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      genre: genre,
+    }),
+  });
 
-    if (!response.ok) {
-        throw new Error('Error creating genre')
-    }
+  if (!response.ok) {
+    throw new Error("Error creating genre");
+  }
 
-    return response.json()
+  return response.json();
 }
-
 
 export async function updateGenre(id, genre) {
-    const response = await fetch(`${API_URL}/genres/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            genre: genre
-        })
-    })
+  const response = await fetch(`${API_URL}/genres/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      genre: genre,
+    }),
+  });
 
-    if (!response.ok) {
-        throw new Error('Error updating genre')
-    }
+  if (!response.ok) {
+    throw new Error("Error updating genre");
+  }
 
-    return response.json()
+  return response.json();
 }
-
 
 export async function deleteGenre(id) {
-    const response = await fetch(`${API_URL}/genres/${id}`, {
-        method: 'DELETE'
-    })
+  const response = await fetch(`${API_URL}/genres/${id}`, {
+    method: "DELETE",
+  });
 
-    if (!response.ok) {
-        throw new Error('Error deleting genre')
-    }
+  if (!response.ok) {
+    throw new Error("Error deleting genre");
+  }
 
-    return response.json()
+  return response.json();
 }
-
 
 export async function getPlatforms() {
   const response = await fetch(`${API_URL}/platforms`);
@@ -218,55 +215,103 @@ export async function getPlatforms() {
 }
 
 export async function deletePlatform(id) {
-    const response = await fetch(`${API_URL}/platforms/${id}`, {
-        method: 'DELETE'
-    })
+  const response = await fetch(`${API_URL}/platforms/${id}`, {
+    method: "DELETE",
+  });
 
-    if (!response.ok) {
-        throw new Error('Error deleting game platform')
-    }
+  if (!response.ok) {
+    throw new Error("Error deleting game platform");
+  }
 
-    return response.json()
+  return response.json();
 }
 
 export async function createPlatform(name, releaseDate, purchaseDate) {
-    const response = await fetch(`${API_URL}/platforms`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: name,
-            release_date: releaseDate,
-            purchase_date: purchaseDate || null
-        })
-    })
+  const response = await fetch(`${API_URL}/platforms`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: name,
+      release_date: releaseDate,
+      purchase_date: purchaseDate || null,
+    }),
+  });
 
-    if (!response.ok) {
-        throw new Error('Error creating platform')
-    }
+  if (!response.ok) {
+    throw new Error("Error creating platform");
+  }
 
-    return response.json()
+  return response.json();
 }
 
 export async function updatePlatform(id, name, releaseDate, purchaseDate) {
-    const response = await fetch(`${API_URL}/platforms/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: name,
-            release_date: releaseDate,
-            purchase_date: purchaseDate || null
-        })
-    })
+  const response = await fetch(`${API_URL}/platforms/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: name,
+      release_date: releaseDate,
+      purchase_date: purchaseDate || null,
+    }),
+  });
 
-    if (!response.ok) {
-        throw new Error('Error updating platform')
-    }
+  if (!response.ok) {
+    throw new Error("Error updating platform");
+  }
 
-    return response.json()
+  return response.json();
+}
+
+export async function linkOpenCriticPlatform(idGamePlatform, idOpenCritic) {
+  const response = await fetch(
+    `${API_URL}/platforms/${idGamePlatform}/link-opencritic`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id_opencritic: idOpenCritic,
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+
+    throw new Error(
+      error.detail?.[0]?.msg ??
+        error.detail ??
+        "Error linking OpenCritic platform",
+    );
+  }
+
+  return await response.json();
+}
+
+export async function unlinkOpenCriticPlatform(idGamePlatform) {
+  const response = await fetch(
+    `${API_URL}/platforms/${idGamePlatform}/unlink-opencritic`,
+    {
+      method: "POST",
+    },
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+
+    throw new Error(
+      error.detail?.[0]?.msg ??
+        error.detail ??
+        "Error unlinking OpenCritic platform",
+    );
+  }
+
+  return await response.json();
 }
 
 //#endregion
@@ -275,7 +320,7 @@ export async function updatePlatform(id, name, releaseDate, purchaseDate) {
 
 export async function searchOpenCriticGames(criteria) {
   const response = await fetch(
-    `${API_URL}/opencritic/games/search?criteria=${encodeURIComponent(criteria)}`
+    `${API_URL}/opencritic/games/search?criteria=${encodeURIComponent(criteria)}`,
   );
 
   if (!response.ok) {
@@ -286,9 +331,7 @@ export async function searchOpenCriticGames(criteria) {
 }
 
 export async function getOpenCriticGame(idOpenCritic) {
-  const response = await fetch(
-    `${API_URL}/opencritic/games/${idOpenCritic}`
-  );
+  const response = await fetch(`${API_URL}/opencritic/games/${idOpenCritic}`);
 
   if (!response.ok) {
     throw new Error("Error loading OpenCritic game");
@@ -297,6 +340,27 @@ export async function getOpenCriticGame(idOpenCritic) {
   return await response.json();
 }
 
+export async function syncOpenCriticGenres() {
+  const response = await fetch(`${API_URL}/genres/sync-opencritic`, {
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.detail?.[0]?.msg ?? "Error synchronizing genres");
+  }
+
+  return await response.json();
+}
+
+export async function getOpenCriticPlatforms() {
+  const response = await fetch(`${API_URL}/opencritic/platforms`);
+
+  if (!response.ok) {
+    throw new Error("Error loading OpenCritic platforms");
+  }
+
+  return await response.json();
+}
+
 //#endregion
-
-

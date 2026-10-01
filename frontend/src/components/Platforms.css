@@ -333,3 +333,244 @@
     width: 55px;
     text-align: center;
 }
+
+
+/* OpenCritic link */
+
+.platform-link-opencritic,
+.platform-unlink-opencritic {
+
+    padding: 6px 10px;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+
+}
+
+
+/* Link */
+
+.platform-link-opencritic {
+
+    background: transparent;
+
+    border: 1px solid #445c66;
+
+    color: #9fc3d1;
+
+}
+
+.platform-link-opencritic:hover {
+
+    background: #23343a;
+
+    border-color: #5d7f8b;
+
+    color: #c4e2eb;
+
+}
+
+
+/* Unlink */
+
+.platform-unlink-opencritic {
+
+    background: transparent;
+
+    border: 1px solid #664444;
+
+    color: #cc8888;
+
+}
+
+.platform-unlink-opencritic:hover {
+
+    background: #3a2222;
+
+    border-color: #885555;
+
+    color: #ffaaaa;
+
+}
+
+
+/* OpenCritic modal */
+
+.platform-modal-overlay {
+
+    position: fixed;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.65);
+
+    z-index: 1000;
+
+}
+
+
+.platform-modal {
+
+    width: 100%;
+
+    max-width: 420px;
+
+    box-sizing: border-box;
+
+    padding: 20px;
+
+    background: #1b1b1b;
+
+    border: 1px solid #333;
+
+    border-radius: 6px;
+
+    color: #eeeeee;
+
+}
+
+
+.platform-modal h3 {
+
+    margin-top: 0;
+
+    margin-bottom: 15px;
+
+}
+
+
+.platform-modal label {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    color: #999;
+
+    font-size: 12px;
+
+}
+
+
+.platform-modal select {
+
+    box-sizing: border-box;
+
+    width: 100%;
+
+    padding: 8px 10px;
+
+    background: #111;
+
+    border: 1px solid #444;
+
+    border-radius: 5px;
+
+    color: #eeeeee;
+
+    font-size: 14px;
+
+    outline: none;
+
+}
+
+
+.platform-modal select:focus {
+
+    background: #151515;
+
+    border-color: #777;
+
+}
+
+
+.platform-modal-error {
+
+    padding: 9px 11px;
+
+    margin-top: 12px;
+
+    background: #321f1f;
+
+    border: 1px solid #633f3f;
+
+    border-radius: 5px;
+
+    color: #e7a5a5;
+
+    font-size: 13px;
+
+}
+
+
+.platform-modal-actions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    margin-top: 18px;
+
+}
+
+
+.platform-modal-actions button {
+
+    padding: 6px 10px;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+
+    background: transparent;
+
+    border: 1px solid #444;
+
+    color: #aaa;
+
+}
+
+
+.platform-modal-actions button:hover {
+
+    background: #292929;
+
+    border-color: #666;
+
+    color: #eee;
+
+}
+
+.platform-opencritic-info {
+    padding: 6px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+    line-height: 1;
+    background: transparent;
+    border: 1px solid #445c66;
+    color: #9fc3d1;
+}
+
+.platform-opencritic-info:hover {
+    background: #23343a;
+    border-color: #5d7f8b;
+    color: #c4e2eb;
+}

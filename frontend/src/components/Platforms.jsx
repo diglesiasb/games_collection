@@ -3,7 +3,10 @@ import {
     getPlatforms,
     deletePlatform,
     createPlatform,
-    updatePlatform
+    updatePlatform,
+    getOpenCriticPlatforms,
+    linkOpenCriticPlatform,
+    unlinkOpenCriticPlatform
 } from '../services/gamesApi'
 import ConfirmModal from './ConfirmModal'
 import InfoModal from './InfoModal'
@@ -27,19 +30,69 @@ function Platforms({ onBack }) {
     const [editError, setEditError] = useState('')
 
 
+    const [opencriticPlatforms, setOpencriticPlatforms] = useState([])
+    const [linkingPlatform, setLinkingPlatform] = useState(null)
+    const [selectedOpencriticPlatform, setSelectedOpencriticPlatform] = useState('')
+    const [linkError, setLinkError] = useState('')
+    const [opencriticInfoPlatform, setOpencriticInfoPlatform] = useState(null)
+
+
+
     useEffect(() => {
         loadPlatforms()
+        loadOpenCriticPlatforms()
     }, [])
 
 
     async function loadPlatforms() {
-
         try {
             const data = await getPlatforms()
             setPlatforms(data)
         } catch (error) {
             console.error(error)
         }
+    }
+
+    async function loadOpenCriticPlatforms() {
+        try {
+            const data = await getOpenCriticPlatforms()
+            setOpencriticPlatforms(data)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+
+    async function openOpenCriticLink(platform) {
+
+        setLinkError('')
+        setSelectedOpencriticPlatform('')
+
+        await loadOpenCriticPlatforms()
+
+        setLinkingPlatform(platform)
+    }
+
+
+    function getAvailableOpenCriticPlatforms() {
+
+        const linkedIds = new Set(
+            platforms
+                .filter(platform => platform.id_opencritic !== null)
+                .map(platform => platform.id_opencritic)
+        )
+
+        return opencriticPlatforms.filter(
+            platform => !linkedIds.has(platform.id)
+        )
+    }
+
+    function getOpenCriticPlatformName(idOpenCritic) {
+        const platform = opencriticPlatforms.find(
+            platform => platform.id === idOpenCritic
+        )
+
+        return platform?.name ?? `ID ${idOpenCritic}`
     }
 
 
@@ -211,6 +264,66 @@ function Platforms({ onBack }) {
             setEditError('Error updating platform.')
 
         }
+    }
+
+    async function handleLinkOpenCritic() {
+
+        if (!selectedOpencriticPlatform) {
+            setLinkError('Select an OpenCritic platform.')
+            return
+        }
+
+        try {
+
+            await linkOpenCriticPlatform(
+                linkingPlatform.id_game_platform,
+                Number(selectedOpencriticPlatform)
+            )
+
+            setLinkingPlatform(null)
+            setSelectedOpencriticPlatform('')
+            setLinkError('')
+
+            await loadPlatforms()
+
+        } catch (error) {
+
+            console.error(error)
+
+            setLinkError(error.message)
+        }
+    }
+
+    function handleUnlinkOpenCritic(platform) {
+
+        setConfirmModal({
+            title: 'Unlink OpenCritic',
+            message: `Are you sure you want to unlink OpenCritic from ${platform.name}?`,
+
+            onConfirm: async () => {
+
+                try {
+
+                    await unlinkOpenCriticPlatform(
+                        platform.id_game_platform
+                    )
+
+                    setConfirmModal(null)
+
+                    await loadPlatforms()
+
+                } catch (error) {
+
+                    console.error(error)
+
+                    setConfirmModal({
+                        title: 'Unlink error',
+                        message: error.message,
+                        onConfirm: () => setConfirmModal(null)
+                    })
+                }
+            }
+        })
     }
 
 
@@ -431,9 +544,9 @@ function Platforms({ onBack }) {
                                         </span>
 
                                         <span className="platform-release-date">
-                                            Released: {platform.release_date}                                           
+                                            Released: {platform.release_date}
                                         </span>
-                                        <span className="platform-release-date">                                            
+                                        <span className="platform-release-date">
                                             Purchased: {platform.purchase_date ?? '-'}
                                         </span>
 
@@ -445,6 +558,32 @@ function Platforms({ onBack }) {
 
 
                                     <div className="platform-item-actions">
+
+                                        {platform.id_opencritic === null ? (
+                                            <button
+                                                className="platform-link-opencritic"
+                                                onClick={() => openOpenCriticLink(platform)}
+                                            >
+                                                Link OpenCritic
+                                            </button>
+                                        ) : (
+                                            <>
+                                                <button
+                                                    className="platform-opencritic-info"
+                                                    onClick={() => setOpencriticInfoPlatform(platform)}
+                                                    title="OpenCritic platform information"
+                                                >
+                                                    ⓘ
+                                                </button>
+
+                                                <button
+                                                    className="platform-unlink-opencritic"
+                                                    onClick={() => handleUnlinkOpenCritic(platform)}
+                                                >
+                                                    Unlink OpenCritic
+                                                </button>
+                                            </>
+                                        )}
 
                                         <button
                                             className="platform-edit"
@@ -496,6 +635,114 @@ function Platforms({ onBack }) {
                     />
                 )
             }
+
+            {linkingPlatform && (
+                <div className="platform-modal-overlay">
+
+                    <div className="platform-modal">
+
+                        <h3>
+                            Link OpenCritic
+                        </h3>
+
+                        <p>
+                            Local platform: <strong>{linkingPlatform.name}</strong>
+                        </p>
+
+                        <label>
+                            OpenCritic platform
+
+                            <select
+                                value={selectedOpencriticPlatform}
+                                onChange={event =>
+                                    setSelectedOpencriticPlatform(event.target.value)
+                                }
+                            >
+                                <option value="">
+                                    Select platform
+                                </option>
+
+                                {getAvailableOpenCriticPlatforms().map(platform => (
+                                    <option
+                                        key={platform.id}
+                                        value={platform.id}
+                                    >
+                                        {platform.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </label>
+
+                        {linkError && (
+                            <div className="platform-modal-error">
+                                {linkError}
+                            </div>
+                        )}
+
+                        <div className="platform-modal-actions">
+
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setLinkingPlatform(null)
+                                    setSelectedOpencriticPlatform('')
+                                    setLinkError('')
+                                }}
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={handleLinkOpenCritic}
+                            >
+                                Link
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            )}
+
+            {opencriticInfoPlatform && (
+                <div className="platform-modal-overlay">
+                    <div className="platform-modal">
+                        <h3>
+                            OpenCritic platform
+                        </h3>
+
+                        <p>
+                            Local platform:{' '}
+                            <strong>{opencriticInfoPlatform.name}</strong>
+                        </p>
+
+                        <p>
+                            OpenCritic platform:{' '}
+                            <strong>
+                                {getOpenCriticPlatformName(
+                                    opencriticInfoPlatform.id_opencritic
+                                )}
+                            </strong>
+                        </p>
+
+                        {/* <p>
+                            OpenCritic ID:{' '}
+                            <strong>{opencriticInfoPlatform.id_opencritic}</strong>
+                        </p> */}
+
+                        <div className="platform-modal-actions">
+                            <button
+                                type="button"
+                                onClick={() => setOpencriticInfoPlatform(null)}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
         </div >
     )

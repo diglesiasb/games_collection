@@ -3,7 +3,8 @@ import {
     getGenres,
     deleteGenre,
     createGenre,
-    updateGenre
+    updateGenre,
+    syncOpenCriticGenres
 } from '../services/gamesApi'
 import ConfirmModal from './ConfirmModal'
 import InfoModal from './InfoModal'
@@ -41,6 +42,31 @@ function Genres({ onBack }) {
 
             console.error(error)
 
+        }
+    }
+
+    async function handleSyncOpenCritic() {
+
+        try {
+
+            const result = await syncOpenCriticGenres()
+
+            setInfoModal({
+                title: 'OpenCritic Synchronization',
+                message:
+                    result.added > 0
+                        ? `${result.added} genres added.`
+                        : 'No new genres were added.'
+            })
+
+        } catch (error) {
+
+            console.error(error)
+
+            setInfoModal({
+                title: 'OpenCritic Synchronization error',
+                message: 'Error synchronizing genres with OpenCritic.'
+            })
         }
     }
 
@@ -216,6 +242,13 @@ function Genres({ onBack }) {
                     onClick={openAddForm}
                 >
                     Add Genre
+                </button>
+
+                <button
+                    className="genres-add"
+                    onClick={handleSyncOpenCritic}
+                >
+                    ⇄ OpenCritic
                 </button>
 
             </div>
@@ -404,7 +437,10 @@ function Genres({ onBack }) {
                 <InfoModal
                     title={infoModal.title}
                     message={infoModal.message}
-                    onClose={() => setInfoModal(null)}
+                    onClose={async () => {
+                        setInfoModal(null)
+                        await loadGenres()
+                    }}
                 />
             )}
 

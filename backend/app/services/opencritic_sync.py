@@ -9,7 +9,9 @@ from .opencritic import get_genres
 
 def sync_genres(db: Session):
     opencritic_genres = get_genres()
-    
+
+    added = 0
+
     for opencritic_genre in opencritic_genres:
         id_opencritic = opencritic_genre.get("id")
         name = opencritic_genre.get("name")
@@ -22,14 +24,16 @@ def sync_genres(db: Session):
 
         existing_genre = result.scalar_one_or_none()
 
-        if existing_genre:           
+        if existing_genre:
             continue
 
         genre = Genre(
             genre=name,
-            id_opencritic=id_opencritic,            
+            id_opencritic=id_opencritic,
         )
-
         db.add(genre)
+        added += 1
 
     db.commit()
+
+    return added
