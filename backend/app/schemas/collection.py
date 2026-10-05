@@ -13,3 +13,5 @@ class CollectionCreate(CollectionItemBase):
 
     # Genres
     genres: list[int]
+    
+    image: str | None = None

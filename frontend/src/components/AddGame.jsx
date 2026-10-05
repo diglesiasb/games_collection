@@ -24,7 +24,9 @@ function AddGame({ onBack, onGameCreated }) {
         edition: '',
         type: 'Physical',
         release_date: '',
-        purchase_date: ''
+        purchase_date: '',
+        id_opencritic: null,
+        image: null,
     })
 
     const [errors, setErrors] = useState({})
@@ -72,8 +74,14 @@ function AddGame({ onBack, onGameCreated }) {
 
 
     const handleOpenCriticSearch = async () => {
+        const title = formData.title.trim()
+
+        if (!title) {
+            return
+        }
+
         try {
-            const results = await searchOpenCriticGames(formData.title)
+            const results = await searchOpenCriticGames(title)
 
             setOpencriticResults(results)
             setShowOpenCriticModal(true)
@@ -93,6 +101,84 @@ function AddGame({ onBack, onGameCreated }) {
             console.error(error)
         }
     }
+
+
+    const handleOpenCriticAccept = () => {
+        if (!opencriticGame) {
+            return
+        }
+
+        let localPlatform = null
+        let selectedOpencriticPlatformData = null
+
+        if (selectedOpencriticPlatform) {
+            selectedOpencriticPlatformData =
+                opencriticGame.platforms.find(
+                    platform =>
+                        platform.id_opencritic === selectedOpencriticPlatform
+                )
+
+            localPlatform = platforms.find(
+                platform =>
+                    platform.id_opencritic === selectedOpencriticPlatform
+            )
+
+            if (!localPlatform) {
+                return
+            }
+        }
+
+        const localGenreIds = opencriticGame.genres
+            .map(opencriticGenre => {
+                const localGenre = genres.find(
+                    genre =>
+                        genre.id_opencritic ===
+                        opencriticGenre.id_opencritic
+                )
+
+                return localGenre?.id_genre
+            })
+            .filter(id => id !== undefined)
+
+        setFormData(prev => ({
+            ...prev,
+            title: opencriticGame.title ?? '',
+            developer: opencriticGame.developer ?? '',
+            publisher: opencriticGame.publisher ?? '',
+            opencritic_score:
+                opencriticGame.opencritic_score ?? '',
+            id_opencritic: opencriticGame.id_opencritic,
+            genres: localGenreIds,
+            image: opencriticGame.image ?? null,
+            id_game_platform:
+                localPlatform?.id_game_platform ?? prev.id_game_platform,
+            release_date:
+                selectedOpencriticPlatformData?.release_date ??
+                prev.release_date
+        }))
+
+        setShowOpenCriticModal(false)
+        setOpencriticGame(null)
+        setSelectedOpencriticPlatform(null)
+    }
+
+
+    const getAvailableOpenCriticPlatforms = () => {
+        if (!opencriticGame) {
+            return []
+        }
+
+        const linkedOpenCriticIds = new Set(
+            platforms
+                .filter(platform => platform.id_opencritic !== null)
+                .map(platform => platform.id_opencritic)
+        )
+
+        return opencriticGame.platforms.filter(platform =>
+            linkedOpenCriticIds.has(platform.id_opencritic)
+        )
+    }
+
 
     const handleChange = (event) => {
         const { name, value } = event.target
@@ -187,6 +273,7 @@ function AddGame({ onBack, onGameCreated }) {
                         OpenCritic Score
                         <input
                             type="number"
+                            className="add-game-input-disabled"
                             name="opencritic_score"
                             value={formData.opencritic_score}
                             disabled
@@ -322,21 +409,28 @@ function AddGame({ onBack, onGameCreated }) {
                         {!opencriticGame ? (
                             <>
                                 <div className="opencritic-results">
-                                    {opencriticResults.slice(0, 5).map(game => (
-                                        <button
-                                            type="button"
-                                            key={game.id}
-                                            className="opencritic-result"
-                                            onClick={() => handleOpenCriticSelect(game.id)}
-                                        >
-                                            {game.name}
-                                        </button>
-                                    ))}
+                                    {opencriticResults.length === 0 ? (
+                                        <div className="opencritic-no-results">
+                                            No games found.
+                                        </div>
+                                    ) : (
+                                        opencriticResults.slice(0, 5).map(game => (
+                                            <button
+                                                type="button"
+                                                key={game.id}
+                                                className="opencritic-result"
+                                                onClick={() => handleOpenCriticSelect(game.id)}
+                                            >
+                                                {game.name}
+                                            </button>
+                                        ))
+                                    )}
                                 </div>
 
                                 <div className="opencritic-modal-actions">
                                     <button
                                         type="button"
+                                        className="opencritic-modal-actions-cancel"
                                         onClick={() => setShowOpenCriticModal(false)}
                                     >
                                         Cancel
@@ -347,44 +441,82 @@ function AddGame({ onBack, onGameCreated }) {
                             <>
                                 <div className="opencritic-game-details">
 
+                                    {opencriticGame.image && (
+                                        <img
+                                            src={opencriticGame.image}
+                                            alt={opencriticGame.title}
+                                            className="opencritic-game-image"
+                                        />
+                                    )}
+
                                     <h3>{opencriticGame.title}</h3>
 
-                                    <p>
-                                        Developer: {opencriticGame.developer}
-                                    </p>
+                                    <div className="opencritic-game-info">
 
-                                    <p>
-                                        Publisher: {opencriticGame.publisher}
-                                    </p>
+                                        <div className="opencritic-game-info-row">
+                                            <span>Developer</span>
+                                            <strong>{opencriticGame.developer ?? '-'}</strong>
+                                        </div>
 
-                                    <p>
-                                        OpenCritic Score: {opencriticGame.opencritic_score}
-                                    </p>
+                                        <div className="opencritic-game-info-row">
+                                            <span>Publisher</span>
+                                            <strong>{opencriticGame.publisher ?? '-'}</strong>
+                                        </div>
 
-                                    <h4>Platform</h4>
+                                        <div className="opencritic-game-info-row">
+                                            <span>OpenCritic Score</span>
+                                            <strong>
+                                                {opencriticGame.opencritic_score ?? '-'}
+                                            </strong>
+                                        </div>
 
-                                    <div className="opencritic-platforms">
-                                        {opencriticGame.platforms.map(platform => (
-                                            <label key={platform.id_opencritic}>
-                                                <input
-                                                    type="radio"
-                                                    name="opencritic-platform"
-                                                    value={platform.id_opencritic}
-                                                    checked={
-                                                        selectedOpencriticPlatform ===
-                                                        platform.id_opencritic
-                                                    }
-                                                    onChange={() =>
-                                                        setSelectedOpencriticPlatform(
-                                                            platform.id_opencritic
-                                                        )
-                                                    }
-                                                />
-
-                                                {platform.name}
-                                            </label>
-                                        ))}
                                     </div>
+
+                                    {opencriticGame.genres.length > 0 && (
+                                        <>
+                                            <h4>Genres</h4>
+
+                                            <div className="opencritic-genres">
+                                                {opencriticGame.genres.map(genre => (
+                                                    <span
+                                                        key={genre.id_opencritic}
+                                                        className="opencritic-genre"
+                                                    >
+                                                        {genre.name}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {getAvailableOpenCriticPlatforms().length > 0 && (
+                                        <>
+                                            <h4>Platform</h4>
+
+                                            <div className="opencritic-platforms">
+                                                {getAvailableOpenCriticPlatforms().map(platform => (
+                                                    <label key={platform.id_opencritic}>
+                                                        <input
+                                                            type="radio"
+                                                            name="opencritic-platform"
+                                                            value={platform.id_opencritic}
+                                                            checked={
+                                                                selectedOpencriticPlatform ===
+                                                                platform.id_opencritic
+                                                            }
+                                                            onChange={() =>
+                                                                setSelectedOpencriticPlatform(
+                                                                    platform.id_opencritic
+                                                                )
+                                                            }
+                                                        />
+
+                                                        <span>{platform.name}</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
 
                                 </div>
 
@@ -392,6 +524,7 @@ function AddGame({ onBack, onGameCreated }) {
 
                                     <button
                                         type="button"
+                                        className="opencritic-modal-actions-cancel"
                                         onClick={() => {
                                             setOpencriticGame(null)
                                             setSelectedOpencriticPlatform(null)
@@ -402,9 +535,8 @@ function AddGame({ onBack, onGameCreated }) {
 
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            // TODO: aceptar juego OpenCritic
-                                        }}
+                                        className="opencritic-modal-actions-accept"
+                                        onClick={handleOpenCriticAccept}
                                     >
                                         Accept
                                     </button>

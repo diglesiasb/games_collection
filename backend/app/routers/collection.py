@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
+from pathlib import Path
+import httpx
 
 from ..database import engine
 from ..models.game import Game
@@ -213,6 +215,30 @@ def create_collection(
 
     db.refresh(new_game)
     db.refresh(new_item)
+
+    if collection.image:
+        image_path = (
+           Path(__file__).resolve().parents[1]
+            / "cache"
+            / "images"
+            / f"{new_game.id_game}.jpg"
+        )
+
+    try:
+        response = httpx.get(
+            collection.image,
+            timeout=10.0,
+        )
+        response.raise_for_status()
+
+        image_path.parent.mkdir(parents=True, exist_ok=True)
+        image_path.write_bytes(response.content)
+
+    except httpx.HTTPError:
+        pass
+
+
+
 
     return {
         "game": new_game,

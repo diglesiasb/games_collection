@@ -19,6 +19,7 @@ def search_games(criteria: str):
 
     if USE_MOCK:
         from .opencritic_mock import search_games as mock_search_games
+
         return mock_search_games(criteria)
 
     if not RAPIDAPI_KEY:
@@ -45,10 +46,12 @@ def search_games(criteria: str):
 
     return response.json()
 
+
 def get_game(id_opencritic: int):
 
     if USE_MOCK:
         from .opencritic_mock import get_game as mock_get_game
+
         return mock_get_game(id_opencritic)
 
     if not RAPIDAPI_KEY:
@@ -76,6 +79,7 @@ def get_game(id_opencritic: int):
 
 
 IMAGE_SIZES = ["xl", "lg", "md", "sm", "xs", "og"]
+
 
 def parse_game(data: dict):
     developer = None
@@ -111,18 +115,18 @@ def parse_game(data: dict):
         for platform in data.get("Platforms", [])
     ]
 
-    
     score = data.get("medianScore")
     if score == -1:
         score = None
 
-
     images = data.get("images") or {}
     masthead = images.get("masthead") or {}
     image = None
+
+
     for size in IMAGE_SIZES:
         if masthead.get(size):
-            image = masthead[size]
+            image = f"https://img.opencritic.com/{masthead[size]}"
             break
 
     return {
@@ -135,6 +139,7 @@ def parse_game(data: dict):
         "platforms": platforms,
         "image": image,
     }
+
 
 def get_platforms():
     if not RAPIDAPI_KEY:
@@ -159,6 +164,7 @@ def get_platforms():
     response.raise_for_status()
 
     return response.json()
+
 
 def get_genres():
     if not RAPIDAPI_KEY:
