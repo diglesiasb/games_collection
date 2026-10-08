@@ -4,7 +4,7 @@ from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.middleware.cors import CORSMiddleware
 
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 from pathlib import Path
 
 from sqlalchemy import text, select
@@ -16,6 +16,8 @@ from app.schemas import collection
 
 from .routers import opencritic, platforms, genres, games,  collection
 
+from .services.opencritic_usage import OpenCriticQuotaExceeded
+
 
 def get_db():
     with Session(engine) as session:
@@ -23,6 +25,25 @@ def get_db():
 
 
 app = FastAPI(title="Games Collection API", version="0.1.0", docs_url=None)
+
+
+@app.exception_handler(OpenCriticQuotaExceeded)
+def opencritic_quota_exceeded_handler(
+    request: Request,
+    exc: OpenCriticQuotaExceeded,
+):
+    return JSONResponse(
+        status_code=429,
+        content={
+            "detail": exc.message,
+            "reset_at": (
+                exc.reset_at.isoformat()
+                if exc.reset_at
+                else None
+            ),
+        },
+    )
+
 
 app.include_router(opencritic.router)
 app.include_router(platforms.router)

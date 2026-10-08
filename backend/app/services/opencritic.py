@@ -3,7 +3,7 @@ import httpx
 
 from dotenv import load_dotenv
 from sqlalchemy.orm import Session
-from .opencritic_usage import get_usage
+from .opencritic_usage import check_quota, get_usage
 from datetime import datetime, timezone, timedelta
 
 load_dotenv()
@@ -15,14 +15,6 @@ print("OPENCRITIC_MOCK =", USE_MOCK)
 RAPIDAPI_KEY = os.getenv("RAPIDAPI_KEY")
 RAPIDAPI_HOST = os.getenv("RAPIDAPI_HOST")
 
-OPENCRITIC_USAGE = {
-    "searches_limit": None,
-    "searches_remaining": None,
-    "searches_reset": None,
-    "requests_limit": None,
-    "requests_remaining": None,
-    "requests_reset": None,
-}
 
 def get_header_int(
     response: httpx.Response,
@@ -87,27 +79,8 @@ def update_rate_limit_info(
         )
 
     usage.updated_at = now
-        
-    OPENCRITIC_USAGE["searches_limit"] = response.headers.get(
-        "x-ratelimit-searches-limit"
-    )
-    OPENCRITIC_USAGE["searches_remaining"] = response.headers.get(
-        "x-ratelimit-searches-remaining"
-    )
-    OPENCRITIC_USAGE["searches_reset"] = response.headers.get(
-        "x-ratelimit-searches-reset"
-    )
-
-    OPENCRITIC_USAGE["requests_limit"] = response.headers.get(
-        "x-ratelimit-requests-limit"
-    )
-    OPENCRITIC_USAGE["requests_remaining"] = response.headers.get(
-        "x-ratelimit-requests-remaining"
-    )
-    OPENCRITIC_USAGE["requests_reset"] = response.headers.get(
-        "x-ratelimit-requests-reset"
-    )
-
+       
+    
     db.commit()
 
 
@@ -123,6 +96,10 @@ def search_games(criteria: str, db: Session):
 
     if not RAPIDAPI_HOST:
         raise RuntimeError("RAPIDAPI_HOST is not configured")
+
+
+    check_quota(db, is_search=True)
+
 
     url = f"https://{RAPIDAPI_HOST}/game/search"
 
@@ -158,6 +135,9 @@ def get_game(id_opencritic: int, db: Session):
     if not RAPIDAPI_HOST:
         raise RuntimeError("RAPIDAPI_HOST is not configured")
 
+
+    check_quota(db)
+    
     url = f"https://{RAPIDAPI_HOST}/game/{id_opencritic}"
 
     headers = {
@@ -240,12 +220,14 @@ def parse_game(data: dict):
     }
 
 
-def get_platforms():
+def get_platforms(db: Session):
     if not RAPIDAPI_KEY:
         raise RuntimeError("RAPIDAPI_KEY is not configured")
 
     if not RAPIDAPI_HOST:
         raise RuntimeError("RAPIDAPI_HOST is not configured")
+
+    check_quota(db)
 
     url = f"https://{RAPIDAPI_HOST}/platform"
 
@@ -260,16 +242,20 @@ def get_platforms():
         headers=headers,
     )
 
+    update_rate_limit_info(response, db)
+
     response.raise_for_status()
 
     return response.json()
 
 
-def get_genres():
+def get_genres(db: Session):
     if not RAPIDAPI_KEY:
         raise RuntimeError("RAPIDAPI_KEY is not configured")
     if not RAPIDAPI_HOST:
         raise RuntimeError("RAPIDAPI_HOST is not configured")
+
+    check_quota(db)
 
     url = f"https://{RAPIDAPI_HOST}/genre"
 
@@ -280,6 +266,9 @@ def get_genres():
     }
 
     response = httpx.get(url, headers=headers)
+
+    update_rate_limit_info(response, db)
+
     response.raise_for_status()
 
     return response.json()

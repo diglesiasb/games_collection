@@ -10,28 +10,132 @@ body {
 }
 
 .app-header {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .app-header h1 {
-    margin: 0;
+  margin: 0;
 }
 
 .app-settings {
-    background: none;
-    border: none;
-    color: #eeeeee;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 4px;
-    line-height: 1;
-    transition: color 0.2s, transform 0.2s;
+  background: none;
+  border: none;
+  color: #eeeeee;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition:
+    color 0.2s,
+    transform 0.2s;
+}
+
+.app-header-buttons {
+  display: flex;
+  align-items:flex-end;
 }
 
 .app-settings:hover {
-    color: #bbbbbb;
-    transform: rotate(45deg);
+  color: #bbbbbb;
+  transform: rotate(45deg);
+}
+
+.opencriticusage-button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #eeeeee;
+  border-radius: 50%;
+  background: none;
+  color: #eeeeee;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.opencriticusage-button:hover {
+  color: #bbbbbb;
+  border-color: #bbbbbb;
+}
+
+.opencriticusage-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.opencriticusage-modal {
+  width: 280px;
+  max-width: calc(100% - 32px);
+  padding: 16px;
+  box-sizing: border-box;
+  background: var(--background);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+}
+
+.opencriticusage-modal-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.opencriticusage-modal-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.opencriticusage-status {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.opencriticusage-limit {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.opencriticusage-limit span {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.opencriticusage-limit strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.opencriticusage-limit small {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.opencriticusage-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.opencriticusage-modal-footer button {
+  padding: 6px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.opencriticusage-modal-footer button:hover {
+  background: rgba(255, 255, 255, 0.08);
 }

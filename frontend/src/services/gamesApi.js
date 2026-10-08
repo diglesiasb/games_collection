@@ -318,6 +318,16 @@ export async function unlinkOpenCriticPlatform(idGamePlatform) {
 
 //#region OpenCritic
 
+export async function getOpenCriticStatus() {
+  const response = await fetch(`${API_URL}/opencritic/status`);
+
+  if (!response.ok) {
+    throw new Error("Error loading OpenCritic status");
+  }
+
+  return response.json();
+}
+
 export async function searchOpenCriticGames(criteria) {
   const response = await fetch(
     `${API_URL}/opencritic/games/search?criteria=${encodeURIComponent(criteria)}`,
