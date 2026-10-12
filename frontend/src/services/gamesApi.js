@@ -1,9 +1,37 @@
 const API_URL = "http://192.168.0.54:8000";
 
+
+let activeRequests = 0
+
+function notifyLoading() {
+    console.log('DISPATCH loading:', activeRequests > 0, new Date().toLocaleTimeString())
+  window.dispatchEvent(
+    new CustomEvent('api-loading', {
+      detail: { loading: activeRequests > 0 },
+    }),
+  )
+}
+
+async function apiFetch(url, options) {
+  activeRequests++
+  notifyLoading()
+  console.log('INICIO:', url, new Date().toLocaleTimeString())
+
+  try {
+    //await new Promise(resolve => setTimeout(resolve, 3000))
+    return await fetch(url, options)
+  } finally {
+    activeRequests--
+    notifyLoading()
+    console.log('FIN:', url, new Date().toLocaleTimeString())
+  }
+}
+
+
 //#region Games
 
 export async function getGames() {
-  const response = await fetch(`${API_URL}/games`);
+  const response = await apiFetch(`${API_URL}/games`);
 
   if (!response.ok) {
     throw new Error("Error loading games");
@@ -16,7 +44,7 @@ export async function getGames() {
  * @param {number} idGame
  */
 export async function getGame(idGame) {
-  const response = await fetch(`${API_URL}/games/${idGame}`);
+  const response = await apiFetch(`${API_URL}/games/${idGame}`);
 
   if (!response.ok) {
     throw new Error("Error loading game");
@@ -26,7 +54,7 @@ export async function getGame(idGame) {
 }
 
 export async function updateGame(idGame, data) {
-  const response = await fetch(`${API_URL}/games/${idGame}`, {
+  const response = await apiFetch(`${API_URL}/games/${idGame}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -47,7 +75,7 @@ export async function updateGame(idGame, data) {
 }
 
 export async function deleteGame(idGame) {
-  const response = await fetch(`${API_URL}/games/${idGame}`, {
+  const response = await apiFetch(`${API_URL}/games/${idGame}`, {
     method: "DELETE",
   });
 
@@ -61,7 +89,7 @@ export async function deleteGame(idGame) {
 }
 
 export async function createGameCollectionItem(idGame, data) {
-  const response = await fetch(`${API_URL}/games/${idGame}/collection-items`, {
+  const response = await apiFetch(`${API_URL}/games/${idGame}/collection-items`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -85,7 +113,7 @@ export async function createGameCollectionItem(idGame, data) {
 //#region Collection
 
 export async function createCollection(data) {
-  const response = await fetch(`${API_URL}/collection`, {
+  const response = await apiFetch(`${API_URL}/collection`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -107,7 +135,7 @@ export async function createCollection(data) {
 //#region Collection Items
 
 export async function deleteCollectionItem(idCollectionItem) {
-  const response = await fetch(
+  const response = await apiFetch(
     `${API_URL}/collection-items/${idCollectionItem}`,
     {
       method: "DELETE",
@@ -120,7 +148,7 @@ export async function deleteCollectionItem(idCollectionItem) {
 }
 
 export async function updateCollectionItem(idCollectionItem, data) {
-  const response = await fetch(
+  const response = await apiFetch(
     `${API_URL}/collection-items/${idCollectionItem}`,
     {
       method: "PUT",
@@ -147,7 +175,7 @@ export async function updateCollectionItem(idCollectionItem, data) {
 //#region Administration
 
 export async function getGenres() {
-  const response = await fetch(`${API_URL}/genres`);
+  const response = await apiFetch(`${API_URL}/genres`);
 
   if (!response.ok) {
     throw new Error("Error loading genres");
@@ -157,7 +185,7 @@ export async function getGenres() {
 }
 
 export async function createGenre(genre) {
-  const response = await fetch(`${API_URL}/genres`, {
+  const response = await apiFetch(`${API_URL}/genres`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -175,7 +203,7 @@ export async function createGenre(genre) {
 }
 
 export async function updateGenre(id, genre) {
-  const response = await fetch(`${API_URL}/genres/${id}`, {
+  const response = await apiFetch(`${API_URL}/genres/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -193,7 +221,7 @@ export async function updateGenre(id, genre) {
 }
 
 export async function deleteGenre(id) {
-  const response = await fetch(`${API_URL}/genres/${id}`, {
+  const response = await apiFetch(`${API_URL}/genres/${id}`, {
     method: "DELETE",
   });
 
@@ -205,7 +233,7 @@ export async function deleteGenre(id) {
 }
 
 export async function getPlatforms() {
-  const response = await fetch(`${API_URL}/platforms`);
+  const response = await apiFetch(`${API_URL}/platforms`);
 
   if (!response.ok) {
     throw new Error("Error loading platforms");
@@ -215,7 +243,7 @@ export async function getPlatforms() {
 }
 
 export async function deletePlatform(id) {
-  const response = await fetch(`${API_URL}/platforms/${id}`, {
+  const response = await apiFetch(`${API_URL}/platforms/${id}`, {
     method: "DELETE",
   });
 
@@ -227,7 +255,7 @@ export async function deletePlatform(id) {
 }
 
 export async function createPlatform(name, releaseDate, purchaseDate) {
-  const response = await fetch(`${API_URL}/platforms`, {
+  const response = await apiFetch(`${API_URL}/platforms`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -247,7 +275,7 @@ export async function createPlatform(name, releaseDate, purchaseDate) {
 }
 
 export async function updatePlatform(id, name, releaseDate, purchaseDate) {
-  const response = await fetch(`${API_URL}/platforms/${id}`, {
+  const response = await apiFetch(`${API_URL}/platforms/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -267,7 +295,7 @@ export async function updatePlatform(id, name, releaseDate, purchaseDate) {
 }
 
 export async function linkOpenCriticPlatform(idGamePlatform, idOpenCritic) {
-  const response = await fetch(
+  const response = await apiFetch(
     `${API_URL}/platforms/${idGamePlatform}/link-opencritic`,
     {
       method: "POST",
@@ -294,7 +322,7 @@ export async function linkOpenCriticPlatform(idGamePlatform, idOpenCritic) {
 }
 
 export async function unlinkOpenCriticPlatform(idGamePlatform) {
-  const response = await fetch(
+  const response = await apiFetch(
     `${API_URL}/platforms/${idGamePlatform}/unlink-opencritic`,
     {
       method: "POST",
@@ -318,6 +346,25 @@ export async function unlinkOpenCriticPlatform(idGamePlatform) {
 
 //#region OpenCritic
 
+async function fetchOpenCritic(url, options) {
+  const response = await apiFetch(url, options);
+
+  try {
+    const status = await getOpenCriticStatus();
+
+    window.dispatchEvent(
+      new CustomEvent('opencritic-status-updated', {
+        detail: status,
+      }),
+    );
+  } catch (error) {
+    console.error('Error refreshing OpenCritic status:', error);
+  }
+
+  return response;
+}
+
+
 export async function getOpenCriticStatus() {
   const response = await fetch(`${API_URL}/opencritic/status`);
 
@@ -329,7 +376,7 @@ export async function getOpenCriticStatus() {
 }
 
 export async function searchOpenCriticGames(criteria) {
-  const response = await fetch(
+  const response = await fetchOpenCritic(
     `${API_URL}/opencritic/games/search?criteria=${encodeURIComponent(criteria)}`,
   );
 
@@ -341,7 +388,7 @@ export async function searchOpenCriticGames(criteria) {
 }
 
 export async function getOpenCriticGame(idOpenCritic) {
-  const response = await fetch(`${API_URL}/opencritic/games/${idOpenCritic}`);
+  const response = await fetchOpenCritic(`${API_URL}/opencritic/games/${idOpenCritic}`);
 
   if (!response.ok) {
     throw new Error("Error loading OpenCritic game");
@@ -351,7 +398,7 @@ export async function getOpenCriticGame(idOpenCritic) {
 }
 
 export async function syncOpenCriticGenres() {
-  const response = await fetch(`${API_URL}/genres/sync-opencritic`, {
+  const response = await fetchOpenCritic(`${API_URL}/genres/sync-opencritic`, {
     method: "POST",
   });
 
@@ -364,7 +411,7 @@ export async function syncOpenCriticGenres() {
 }
 
 export async function getOpenCriticPlatforms() {
-  const response = await fetch(`${API_URL}/opencritic/platforms`);
+  const response = await fetchOpenCritic(`${API_URL}/opencritic/platforms`);
 
   if (!response.ok) {
     throw new Error("Error loading OpenCritic platforms");

@@ -12,6 +12,88 @@ function App() {
     const [section, setSection] = useState('collection')
     const [showOpenCriticStatus, setShowOpenCriticStatus] = useState(false)
     const [openCriticStatus, setOpenCriticStatus] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+
+    const quotaWarning = (() => {
+        if (!openCriticStatus) {
+            return null
+        }
+
+        const now = new Date()
+
+        const searchesResetAt = openCriticStatus.searches_reset_at
+            ? new Date(openCriticStatus.searches_reset_at)
+            : null
+
+        const requestsResetAt = openCriticStatus.requests_reset_at
+            ? new Date(openCriticStatus.requests_reset_at)
+            : null
+
+        const searchesStale = searchesResetAt && searchesResetAt <= now
+        const requestsStale = requestsResetAt && requestsResetAt <= now
+
+        if (searchesStale || requestsStale) {
+            return {
+                type: 'stale',
+                message: 'OpenCritic quota data may be outdated.',
+            }
+        }
+
+        if (
+            openCriticStatus.searches_remaining === 0 ||
+            openCriticStatus.requests_remaining === 0
+        ) {
+            return {
+                type: 'exhausted',
+                message: 'OpenCritic quota exhausted.',
+            }
+        }
+
+        if (
+            openCriticStatus.searches_remaining <= 5 ||
+            openCriticStatus.requests_remaining <= 5
+        ) {
+            return {
+                type: 'low',
+                message: 'OpenCritic quota is running low.',
+            }
+        }
+
+        return null
+    })()
+
+
+    useEffect(() => {
+        const handleApiLoading = (event) => {
+            console.log('UseEffect loading:', event.detail.loading, new Date().toLocaleTimeString())
+            setIsLoading(event.detail.loading)
+        }
+
+        window.addEventListener('api-loading', handleApiLoading)
+
+        return () => {
+            window.removeEventListener('api-loading', handleApiLoading)
+        }
+    }, [])
+
+
+    useEffect(() => {
+        const handleOpenCriticStatusUpdated = (event) => {
+            setOpenCriticStatus(event.detail)
+        }
+
+        window.addEventListener(
+            'opencritic-status-updated',
+            handleOpenCriticStatusUpdated
+        )
+
+        return () => {
+            window.removeEventListener(
+                'opencritic-status-updated',
+                handleOpenCriticStatusUpdated
+            )
+        }
+    }, [])
 
     useEffect(() => {
         if (!showOpenCriticStatus) {
@@ -29,7 +111,7 @@ function App() {
         <main className="app">
             <div className="app-header">
                 <h1>Games Collection</h1>
-                <div class="app-header-buttons">
+                <div className="app-header-buttons">
                     <button
                         className="opencriticusage-button"
                         onClick={() => setShowOpenCriticStatus(true)}
@@ -45,8 +127,29 @@ function App() {
                         ⚙
                     </button>
                 </div>
-
             </div>
+
+
+            {/* <div
+                style={{
+                    position: 'fixed',
+                    top: '10px',
+                    right: '10px',
+                    zIndex: 99999,
+                    padding: '12px',
+                    background: 'red',
+                    color: 'white',
+                }}
+            >
+                {isLoading ? 'LOADING SÍ' : 'LOADING NO'}
+            </div>
+
+            {quotaWarning && (
+                <div className={`opencriticusage-banner opencriticusage-banner-${quotaWarning.type}`}>
+                    {quotaWarning.message}
+                </div>
+            )} */}
+
 
 
             {showOpenCriticStatus && (
@@ -58,6 +161,19 @@ function App() {
 
                         {openCriticStatus ? (
                             <div className="opencriticusage-status">
+
+                                {(
+                                    (openCriticStatus.searches_reset_at &&
+                                        new Date(openCriticStatus.searches_reset_at) < new Date()) ||
+                                    (openCriticStatus.requests_reset_at &&
+                                        new Date(openCriticStatus.requests_reset_at) < new Date())
+                                ) && (
+                                        <div className="opencriticusage-warning">
+                                            ⚠️ Quota data may be outdated. Waiting for the next OpenCritic request to refresh it.
+                                        </div>
+                                    )}
+
+
                                 <div className="opencriticusage-limit">
                                     <span>Searches</span>
 
