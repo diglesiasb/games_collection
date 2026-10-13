@@ -3,8 +3,11 @@ const API_URL = "http://192.168.0.54:8000";
 
 let activeRequests = 0
 
-function notifyLoading() {
-    console.log('DISPATCH loading:', activeRequests > 0, new Date().toLocaleTimeString())
+export function isApiLoading() {
+  return activeRequests > 0
+}
+
+function notifyLoading() {    
   window.dispatchEvent(
     new CustomEvent('api-loading', {
       detail: { loading: activeRequests > 0 },
@@ -15,15 +18,13 @@ function notifyLoading() {
 async function apiFetch(url, options) {
   activeRequests++
   notifyLoading()
-  console.log('INICIO:', url, new Date().toLocaleTimeString())
-
+  
   try {
     //await new Promise(resolve => setTimeout(resolve, 3000))
     return await fetch(url, options)
   } finally {
     activeRequests--
     notifyLoading()
-    console.log('FIN:', url, new Date().toLocaleTimeString())
   }
 }
 

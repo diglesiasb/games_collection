@@ -127,3 +127,20 @@
   background: #4caf50;
   border: 2px solid #1e1e1e;
 }
+
+.game-card-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #292929, #191919);
+    color: #666;
+}
+
+.game-card-placeholder svg {
+    width: 128px;
+    height: 128px;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 10px rgba(85, 184, 255, 0.08));
+}

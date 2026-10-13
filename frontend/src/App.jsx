@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { getOpenCriticStatus } from './services/gamesApi'
+import { getOpenCriticStatus, isApiLoading } from './services/gamesApi'
 
 import Collection from './components/Collection'
 import Administration from './components/Administration'
@@ -65,12 +65,10 @@ function App() {
 
     useEffect(() => {
         const handleApiLoading = (event) => {
-            console.log('UseEffect loading:', event.detail.loading, new Date().toLocaleTimeString())
             setIsLoading(event.detail.loading)
         }
-
         window.addEventListener('api-loading', handleApiLoading)
-
+        setIsLoading(isApiLoading())
         return () => {
             window.removeEventListener('api-loading', handleApiLoading)
         }
@@ -130,25 +128,26 @@ function App() {
             </div>
 
 
-            {/* <div
-                style={{
-                    position: 'fixed',
-                    top: '10px',
-                    right: '10px',
-                    zIndex: 99999,
-                    padding: '12px',
-                    background: 'red',
-                    color: 'white',
-                }}
-            >
-                {isLoading ? 'LOADING SÍ' : 'LOADING NO'}
-            </div>
+            {isLoading && (
+                <div className="global-loading-overlay">
+                    <div
+                        className="global-loading-modal"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label="Loading"
+                    >
+                        <div className="global-loading-spinner" />
+                        <div className="global-loading-text">Loading...</div>
+                    </div>
+                </div>
+            )}
+
 
             {quotaWarning && (
                 <div className={`opencriticusage-banner opencriticusage-banner-${quotaWarning.type}`}>
                     {quotaWarning.message}
                 </div>
-            )} */}
+            )}
 
 
 

@@ -18,10 +18,10 @@ function AddGame({ onBack, onGameCreated }) {
         title: '',
         developer: '',
         publisher: '',
-        opencritic_score: '',
+        opencritic_score: null,
         genres: [],
         id_game_platform: '',
-        edition: '',
+        edition: 'Standard',
         type: 'Physical',
         release_date: '',
         purchase_date: '',
@@ -275,7 +275,7 @@ function AddGame({ onBack, onGameCreated }) {
                             type="number"
                             className="add-game-input-disabled"
                             name="opencritic_score"
-                            value={formData.opencritic_score}
+                            value={formData.opencritic_score ?? ''}
                             disabled
                         />
                     </label>

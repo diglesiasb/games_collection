@@ -218,24 +218,24 @@ def create_collection(
 
     if collection.image:
         image_path = (
-           Path(__file__).resolve().parents[1]
+            Path(__file__).resolve().parents[1]
             / "cache"
             / "images"
             / f"{new_game.id_game}.jpg"
         )
 
-    try:
-        response = httpx.get(
-            collection.image,
-            timeout=10.0,
-        )
-        response.raise_for_status()
+        try:
+            response = httpx.get(
+                collection.image,
+                timeout=10.0,
+            )
+            response.raise_for_status()
 
-        image_path.parent.mkdir(parents=True, exist_ok=True)
-        image_path.write_bytes(response.content)
+            image_path.parent.mkdir(parents=True, exist_ok=True)
+            image_path.write_bytes(response.content)
 
-    except httpx.HTTPError:
-        pass
+        except httpx.HTTPError:
+            pass
 
 
 
