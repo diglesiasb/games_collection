@@ -1,50 +1,46 @@
 # 🎮 Games Collection
 
-A personal web application to manage and explore a video game collection.
+A personal web application to manage, organize, and explore a video game collection.
 
-The goal is simple: keep track of the games I own, what I am currently playing, what I have completed, and all the information surrounding my collection.
+The goal is to keep track of the games I own, the platforms and editions in my collection, my gaming history, and useful information about each game — all in one place.
 
-The interesting part? **I want to be able to manage the collection using natural language and AI.**
+The project is being built incrementally, with a long-term goal of adding an AI assistant that can understand natural-language requests and interact with the collection through controlled application operations.
 
 ---
 
-## 🤖 AI Assistant
+## ✨ Current Features
 
-The long-term goal is to have an AI assistant integrated into the application that can understand natural language and interact with the collection.
+### Game management
 
-For example:
+- Browse the game collection.
+- Create, edit, view, and delete games.
+- Store game details such as title, developer, publisher, genres, and OpenCritic score.
+- Manage genre associations without losing existing information during metadata synchronization.
 
-> **"I bought GTA 6 for PS5."**
+### Collection items
 
-The assistant should be able to identify the game, retrieve additional information and add it to the collection.
+- Associate one game with one or more items in the personal collection.
+- Track platform, edition, and item type.
+- Store release and purchase dates.
+- Record start and completion dates, completion status, and playing time.
 
-Or:
+### OpenCritic integration
 
-> **"I started GTA 6 today."**
+- Search OpenCritic for games and inspect a selected result before linking it.
+- Link an existing game in the collection to an OpenCritic entry.
+- Update linked game metadata from OpenCritic.
+- Unlink a game from OpenCritic.
+- Fill in developer and publisher only when those fields are empty.
+- Add matching genres that already exist in the local database, without removing existing genre associations or creating genres automatically.
+- Keep the OpenCritic score managed by OpenCritic rather than editable as ordinary game metadata.
+- Track when OpenCritic data was last synchronized.
+- Cache game cover artwork locally and replace it with the OpenCritic image during synchronization when an image is available.
 
-It should automatically register the start date.
-
-And:
-
-> **"I finished GTA 6 yesterday."**
-
-It should mark the game as completed and store the completion date.
-
-The assistant should also be able to answer questions about the collection:
-
-> **"What PS5 games do I still have to play?"**
-
-> **"Which games have I completed this year?"**
-
-> **"Show me games I own with an OpenCritic score above 85 that I haven't played yet."**
-
-The objective is not simply to add a chatbot to the application. The AI should be able to **understand the user's intent and interact with the application's data through controlled operations.**
+OpenCritic synchronization is designed to preserve manually maintained game details while updating the fields controlled by the integration.
 
 ---
 
 ## 🏗️ Architecture
-
-The application is being built progressively using:
 
 ```text
 ┌──────────────────────┐
@@ -59,11 +55,7 @@ The application is being built progressively using:
 │       Backend        │
 └───────┬────────┬─────┘
         │        │
-        │        │ External APIs / AI
-        │        ▼
-        │   ┌───────────┐
-        │   │    AI     │
-        │   └───────────┘
+        │        └──────────► OpenCritic API
         │
         ▼
 ┌──────────────────────┐
@@ -72,17 +64,19 @@ The application is being built progressively using:
 └──────────────────────┘
 ```
 
-### Technologies
+### Technology stack
 
-* **Frontend:** React
-* **Backend:** Python + FastAPI
-* **Database:** PostgreSQL
-* **Database hosting:** Docker
-* **Version control:** Git + GitHub
-* **Game information:** External game APIs
-* **AI:** LLM with tool/function calling
-* **Development:** Raspberry Pi 5
-* **Production server:** Raspberry Pi 4
+- **Frontend:** React
+- **Frontend tooling:** Vite
+- **Backend:** Python + FastAPI
+- **ORM:** SQLAlchemy
+- **Database:** PostgreSQL
+- **Database hosting:** Docker / Docker Compose
+- **Database migrations:** Alembic
+- **External game data:** OpenCritic
+- **Version control:** Git + GitHub
+- **Development hardware:** Raspberry Pi 5
+- **Intended home server:** Raspberry Pi 4
 
 ---
 
@@ -90,213 +84,170 @@ The application is being built progressively using:
 
 ### Collection management
 
-* Add games to the collection
-* Edit game information
-* Remove games
-* Search and filter games
-* Organize games by platform
-* Track physical copies
-* Track game status
+- Manage games and their associated collection items.
+- Organize owned games by platform, edition, and type.
+- Search and filter the collection.
+- Keep game metadata editable while respecting fields managed by external services.
 
 ### Game information
 
-Store information such as:
+Depending on the available data, a game can store:
 
-* Title
-* Platform
-* Release date
-* Developer
-* Publisher
-* Genre
-* Critical score
-* Cover artwork
-* Purchase date
-* Physical condition
-* Notes
+- Title
+- Developer and publisher
+- Genres
+- OpenCritic identifier and score
+- Cover artwork
+- Associated platforms and collection items
 
 ### Gaming history
 
-Track:
+Collection items can track:
 
-* Start date
-* Completion date
-* Current status
-* Playing time
-* Personal notes
+- Purchase date
+- Start date
+- Completion date
+- Completion status
+- Playing time
 
-Possible statuses:
-
-```text
-Backlog
-Playing
-Completed
-Dropped
-On Hold
-```
+Possible future additions include personal notes, richer status tracking, and collection statistics.
 
 ---
 
-## 📱 Responsive Web Application
+## 🧠 Future AI Assistant
 
-The application will be designed to work on both desktop and mobile devices.
+A long-term goal is to integrate an AI assistant that can understand natural-language requests and interact with the collection.
 
-The intention is to have a single responsive application that can be comfortably used from:
+Example requests:
 
-* Desktop
-* Laptop
-* Tablet
-* Smartphone
+> "I bought GTA 6 for PS5."
 
-A Progressive Web App (PWA) may be added later.
+> "I started Metroid Prime today."
 
----
+> "Which games have I completed this year?"
 
-## 🧠 AI Architecture
+> "Show me games with an OpenCritic score above 85 that I haven't played yet."
 
-The AI will not directly manipulate the database.
+The assistant should interpret the user's intent and use explicitly defined backend operations. It should not have unrestricted access to the database or execute arbitrary SQL.
 
-Instead, the backend will expose controlled operations such as:
+A possible architecture:
 
 ```text
-add_game()
-update_game()
-start_game()
-complete_game()
-search_games()
-get_collection_stats()
-```
-
-The AI interprets the user's request and decides which operation is appropriate.
-
-For example:
-
-```text
-User
-  │
-  │ "I started Metroid Prime today"
-  ▼
-AI
-  │
-  │ start_game(
-  │   game="Metroid Prime",
-  │   date="2026-09-01"
-  │ )
-  ▼
-FastAPI
-  │
-  ▼
+User request
+    │
+    ▼
+AI assistant
+    │
+    │ Selects an approved operation
+    ▼
+FastAPI endpoint / application service
+    │
+    ▼
 PostgreSQL
 ```
 
-This keeps database access under the application's control instead of allowing the AI to generate arbitrary SQL commands.
+This feature is part of the future roadmap and is not yet implemented.
+
+---
+
+## 📱 Responsive Application
+
+The frontend is built with React and is intended to support desktop and mobile screens. Responsive improvements and a possible Progressive Web App (PWA) remain future work.
 
 ---
 
 ## 🐳 Development Environment
 
-The project is being developed on a Raspberry Pi 5.
+Development takes place on a Raspberry Pi 5. The intended deployment target is a Raspberry Pi 4 running as an always-on home server.
 
-The application is intended to eventually run on a Raspberry Pi 4 as a small always-on home server.
-
-Docker will be used for services such as PostgreSQL and, where appropriate, other application components.
+PostgreSQL runs in Docker, with Docker Compose used for service configuration. Alembic manages database schema migrations.
 
 ---
 
 ## 🚧 Development Roadmap
 
-The project will be developed incrementally.
-
-The project will be developed incrementally.
+The project is developed incrementally. The checklist below distinguishes existing functionality from planned work.
 
 ### Foundation
 
-* [x] Create GitHub repository
-* [x] Set up Git
-* [x] Connect project to GitHub
-* [x] Set up React with Vite
-* [x] Set up PostgreSQL with Docker Compose
-* [x] Design database schema
-* [x] Set up SQLAlchemy models
-* [x] Set up Alembic migrations
-* [x] Create database tables
-* [x] Define model relationships
-* [x] Set up FastAPI backend
-* [x] Connect FastAPI to PostgreSQL
+- [x] Create GitHub repository and configure Git
+- [x] Set up React with Vite
+- [x] Run PostgreSQL with Docker Compose
+- [x] Design the database schema
+- [x] Set up SQLAlchemy models and relationships
+- [x] Set up Alembic migrations
+- [x] Set up FastAPI and connect it to PostgreSQL
 
-### Backend API
+### Backend and API
 
-* [x] Create `GET /games`
-* [x] Create `POST /games`
-* [ ] Create `GET /games/{id}`
-* [ ] Implement game update
-* [ ] Implement game deletion
-* [ ] Add API validation and error handling
-* [ ] Add collection item endpoints
-* [ ] Add genre endpoints
-* [ ] Add platform endpoints
+- [x] Implement game collection and detail endpoints
+- [x] Implement game creation, editing, and deletion
+- [x] Implement collection item management
+- [x] Include genres, platforms, and collection items in game details
+- [x] Integrate OpenCritic search and game lookup
+- [x] Implement OpenCritic link, update, and unlink operations
+- [x] Preserve manually maintained fields during OpenCritic synchronization
+- [x] Track OpenCritic synchronization timestamps
+- [x] Cache game artwork locally
+- [ ] Review and expand API validation, error handling, and automated tests
 
 ### Frontend
 
-* [ ] Connect React to the API
-* [ ] Implement game collection view
-* [ ] Implement game details view
-* [ ] Implement add/edit game
-* [ ] Implement collection item management
-* [ ] Implement game search and filtering
-* [ ] Implement responsive UI
-* [ ] Implement image cache management
+- [x] Connect React to the API
+- [x] Implement the game collection and detail views
+- [x] Implement game editing
+- [x] Implement collection item management
+- [x] Integrate OpenCritic linking and synchronization into game details
+- [ ] Refine the visual design and interaction feedback
+- [ ] Improve responsive layouts
+- [ ] Add search and filtering improvements
 
-### External Game Data
+### External data and maintenance
 
-* [ ] Integrate OpenCritic API
-* [ ] Store external game identifiers
-* [ ] Retrieve game metadata automatically
-* [ ] Retrieve game cover images
-* [ ] Implement persistent image cache
-* [ ] Implement cache invalidation/cleanup
-* [ ] Implement collection import
-* [ ] Add support for bulk game metadata lookup
+- [x] Integrate OpenCritic metadata
+- [x] Store external game identifiers
+- [x] Synchronize supported metadata and scores
+- [x] Retrieve and cache cover artwork
+- [ ] Improve cache maintenance and image error handling
+- [ ] Add collection import and bulk metadata lookup
+- [ ] Evaluate additional game data sources
 
-### AI Assistant
+### AI assistant
 
-* [ ] Add AI assistant
-* [ ] Implement AI tool/function calling
-* [ ] Implement controlled game management tools
-* [ ] Implement natural language collection queries
+- [ ] Add an AI assistant
+- [ ] Implement tool/function calling
+- [ ] Define controlled game and collection operations
+- [ ] Support natural-language collection queries
 
-### Security & Deployment
+### Security, deployment, and reliability
 
-* [ ] Add authentication
-* [ ] Deploy to Raspberry Pi 4
-* [ ] Add remote access
-* [ ] Add automated database backups
+- [ ] Add authentication
+- [ ] Deploy to the Raspberry Pi 4
+- [ ] Configure secure remote access
+- [ ] Implement automated database backups
+- [ ] Add automated tests and operational monitoring
 
-### Future Improvements
+### Future improvements
 
-* [ ] Add collection statistics
-* [ ] Add advanced filters
-* [ ] Improve mobile experience
-* [ ] Add additional external game data sources
+- [ ] Add collection statistics and advanced filters
+- [ ] Improve gaming history and personal notes
+- [ ] Evaluate PWA support
 
 ---
 
 ## 💾 Backups
 
-GitHub is used to keep the source code safely backed up.
+GitHub stores the version-controlled source code. Database contents are not stored in the Git repository.
 
-Application code and configuration are version controlled with Git.
+Database backups must be handled separately so that the actual collection data can be recovered independently of the application code.
 
-Database data is **not** stored in the Git repository.
-
-Database backups will be implemented separately to protect the actual collection data.
+Secrets, credentials, and machine-specific configuration should not be committed to the repository.
 
 ---
 
 ## 🧪 Development Philosophy
 
-Build it one piece at a time.
-
-Each major working milestone should be committed and pushed to GitHub.
+Build one piece at a time. Test each meaningful change and commit working milestones before moving on.
 
 ```text
 Build
@@ -310,19 +261,17 @@ Push
 Next feature
 ```
 
-If something inevitably explodes, we can return to the last known-good version.
-
-Because apparently remembering the missing semicolon is not considered a valid backup strategy.
+Small, focused changes make it easier to identify problems and return to a known-good version.
 
 ---
 
 ## 📌 Current Status
 
-**Early development**
+**Active development — core collection management and OpenCritic integration implemented.**
 
-The project currently contains the initial React frontend and the basic project structure.
+The application has a React frontend, a FastAPI backend, a PostgreSQL database, collection item management, and OpenCritic integration for linking games, synchronizing metadata and scores, and updating cached cover artwork.
 
-The next milestone is to introduce PostgreSQL and build the first FastAPI endpoint that retrieves games from the database.
+The next focus is to refine the interface and continue improving reliability. The AI assistant, authentication, deployment hardening, and automated database backups remain future milestones.
 
 ---
 
