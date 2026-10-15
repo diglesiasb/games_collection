@@ -1,6 +1,13 @@
+
 import './ConfirmModal.css'
 
-function ConfirmModal({ title, message, onConfirm, onCancel }) {
+function ConfirmModal({
+  title,
+  message,
+  onConfirm,
+  onCancel,
+  confirmText = 'Delete',
+}) {
   return (
     <div className="confirm-modal-overlay">
       <div className="confirm-modal">
@@ -20,7 +27,7 @@ function ConfirmModal({ title, message, onConfirm, onCancel }) {
             className="confirm-modal-confirm"
             onClick={onConfirm}
           >
-            Delete
+            {confirmText}
           </button>
         </div>
       </div>

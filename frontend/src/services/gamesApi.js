@@ -109,6 +109,77 @@ export async function createGameCollectionItem(idGame, data) {
   return await response.json();
 }
 
+
+export async function linkOpenCriticGame(idGame, idOpenCritic) {
+  const response = await apiFetch(
+    `${API_URL}/games/${idGame}/link-opencritic`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id_opencritic: idOpenCritic,
+      }),
+    },
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+
+    throw new Error(
+      error.detail?.[0]?.msg ??
+        error.detail ??
+        "Error linking OpenCritic game",
+    );
+  }
+
+  return await response.json();
+}
+
+export async function unlinkOpenCriticGame(idGame) {
+  const response = await apiFetch(
+    `${API_URL}/games/${idGame}/unlink-opencritic`,
+    {
+      method: "POST",
+    },
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+
+    throw new Error(
+      error.detail?.[0]?.msg ??
+        error.detail ??
+        "Error unlinking OpenCritic game",
+    );
+  }
+
+  return await response.json();
+}
+
+export async function updateOpenCriticGame(idGame) {
+  const response = await apiFetch(
+    `${API_URL}/games/${idGame}/update-opencritic`,
+    {
+      method: "POST",
+    },
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+
+    throw new Error(
+      error.detail?.[0]?.msg ??
+        error.detail ??
+        "Error updating OpenCritic game",
+    );
+  }
+
+  return await response.json();
+}
+
+
 //#endregion
 
 //#region Collection

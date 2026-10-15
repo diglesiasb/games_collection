@@ -9,7 +9,12 @@ import {
     updateGame,
     deleteGame,
     createGameCollectionItem,
-    getGame
+    getGame,
+    searchOpenCriticGames,
+    getOpenCriticGame,
+    linkOpenCriticGame,
+    unlinkOpenCriticGame,
+    updateOpenCriticGame
 } from '../services/gamesApi'
 
 function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
@@ -20,6 +25,100 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
     const [editingGame, setEditingGame] = useState(false)
     const [editingItem, setEditingItem] = useState(null)
     const [addingCollectionItem, setAddingCollectionItem] = useState(false)
+    const [showOpenCriticModal, setShowOpenCriticModal] = useState(false)
+    const [openCriticResults, setOpenCriticResults] = useState([])
+    const [selectedOpenCriticGame, setSelectedOpenCriticGame] = useState(null)
+    const [openCriticLoading, setOpenCriticLoading] = useState(false)
+    const [openCriticError, setOpenCriticError] = useState(null)
+    const [showUnlinkOpenCriticModal, setShowUnlinkOpenCriticModal] = useState(false)
+
+    async function handleOpenCriticSearch() {
+        setOpenCriticLoading(true)
+        setOpenCriticError(null)
+        setOpenCriticResults([])
+        setSelectedOpenCriticGame(null)
+        setShowOpenCriticModal(true)
+
+        try {
+            const results = await searchOpenCriticGames(game.title)
+            setOpenCriticResults(results.slice(0, 5))
+        } catch (error) {
+            setOpenCriticError(error.message)
+        } finally {
+            setOpenCriticLoading(false)
+        }
+    }
+
+    async function handleSelectOpenCriticGame(idOpenCritic) {
+        setOpenCriticLoading(true)
+        setOpenCriticError(null)
+
+        try {
+            const result = await getOpenCriticGame(idOpenCritic)
+            setSelectedOpenCriticGame(result)
+        } catch (error) {
+            setOpenCriticError(error.message)
+        } finally {
+            setOpenCriticLoading(false)
+        }
+    }
+
+    async function handleLinkOpenCritic() {
+        if (!selectedOpenCriticGame) return
+
+        setOpenCriticLoading(true)
+        setOpenCriticError(null)
+
+        try {
+            await linkOpenCriticGame(
+                game.id_game,
+                selectedOpenCriticGame.id_opencritic
+            )
+
+            const updatedGame = await getGame(game.id_game)
+
+            setShowOpenCriticModal(false)
+            setSelectedOpenCriticGame(null)
+            onGameUpdated(updatedGame)
+        } catch (error) {
+            setOpenCriticError(error.message)
+        } finally {
+            setOpenCriticLoading(false)
+        }
+    }
+
+    async function handleUnlinkOpenCritic() {
+        setOpenCriticLoading(true)
+        setOpenCriticError(null)
+
+        try {
+            await unlinkOpenCriticGame(game.id_game)
+
+            const updatedGame = await getGame(game.id_game)
+            onGameUpdated(updatedGame)
+        } catch (error) {
+            setOpenCriticError(error.message)
+        } finally {
+            setOpenCriticLoading(false)
+        }
+    }
+
+    async function handleUpdateOpenCritic() {
+        setOpenCriticLoading(true)
+        setOpenCriticError(null)
+
+        try {
+            await updateOpenCriticGame(game.id_game)
+
+            const updatedGame = await getGame(game.id_game)
+            onGameUpdated(updatedGame)
+        } catch (error) {
+            setOpenCriticError(error.message)
+        } finally {
+            setOpenCriticLoading(false)
+        }
+    }
+
 
     return (
         <div className="game-detail">
@@ -80,15 +179,54 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                                 <strong>{game.opencritic_score ?? 'N/A'}</strong>
                             </div>
 
+
                             <div className="game-detail-actions">
                                 <button onClick={() => setEditingGame(true)}>
                                     Edit
                                 </button>
 
-                                <button onClick={() => setShowDeleteGameModal(true)}>
+                                {game.id_opencritic == null ? (
+                                    <button
+                                        onClick={handleOpenCriticSearch}
+                                        disabled={openCriticLoading}
+                                    >
+                                        Link OpenCritic
+                                    </button>
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={handleUpdateOpenCritic}
+                                            disabled={openCriticLoading}
+                                        >
+                                            Update OpenCritic
+                                        </button>
+
+                                        <button
+                                            onClick={() => {
+                                                setOpenCriticError(null)
+                                                setShowUnlinkOpenCriticModal(true)
+                                            }}
+                                            disabled={openCriticLoading}
+                                        >
+                                            Unlink OpenCritic
+                                        </button>
+                                    </>
+                                )}
+
+                                <button
+                                    onClick={() => setShowDeleteGameModal(true)}
+                                    disabled={openCriticLoading}
+                                >
                                     Delete
                                 </button>
                             </div>
+
+                            {openCriticError && !showOpenCriticModal && (
+                                <p className="opencritic-error" role="alert">
+                                    {openCriticError}
+                                </p>
+                            )}
+
                         </>
                     )}
                 </div>
@@ -265,6 +403,126 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                     }
                 </div>
             )}
+
+
+
+            {showOpenCriticModal && (
+                <div className="opencritic-modal-overlay">
+                    <div className="opencritic-modal">
+                        <h2>Link OpenCritic</h2>
+
+                        <p className="opencritic-modal-subtitle">
+                            Select the OpenCritic game matching "{game.title}".
+                        </p>
+
+                        {openCriticLoading && (
+                            <p className="opencritic-loading">Loading...</p>
+                        )}
+
+                        {openCriticError && (
+                            <p className="opencritic-error" role="alert">
+                                {openCriticError}
+                            </p>
+                        )}
+
+                        {!selectedOpenCriticGame && !openCriticLoading && (
+                            <div className="opencritic-results">
+                                {openCriticResults.length === 0 ? (
+                                    <p>No results found.</p>
+                                ) : (
+                                    openCriticResults.map(result => (
+                                        <button
+                                            key={result.id}
+                                            className="opencritic-result"
+                                            onClick={() =>
+                                                handleSelectOpenCriticGame(result.id)
+                                            }
+                                        >
+                                            {result.name}
+                                        </button>
+                                    ))
+                                )}
+                            </div>
+                        )}
+
+                        {selectedOpenCriticGame && (
+                            <div className="opencritic-selected-game">
+                                <h3>{selectedOpenCriticGame.title}</h3>
+
+                                <p>
+                                    <strong>Developer:</strong>{' '}
+                                    {selectedOpenCriticGame.developer ?? 'Unknown'}
+                                </p>
+
+                                <p>
+                                    <strong>Publisher:</strong>{' '}
+                                    {selectedOpenCriticGame.publisher ?? 'Unknown'}
+                                </p>
+
+                                <p>
+                                    <strong>OpenCritic Score:</strong>{' '}
+                                    {selectedOpenCriticGame.opencritic_score ?? 'N/A'}
+                                </p>
+
+                                <div className="opencritic-modal-actions">
+                                    <button
+                                        onClick={() => {
+                                            setSelectedOpenCriticGame(null)
+                                            setOpenCriticError(null)
+                                        }}
+                                        disabled={openCriticLoading}
+                                    >
+                                        Back 
+                                    </button>
+
+                                    <button
+                                        onClick={handleLinkOpenCritic}
+                                        disabled={openCriticLoading}
+                                    >
+                                        Confirm Link
+                                    </button>
+
+                                    
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="opencritic-modal-footer">
+                            <button
+                                onClick={() => {
+                                    setShowOpenCriticModal(false)
+                                    setSelectedOpenCriticGame(null)
+                                    setOpenCriticError(null)
+                                }}
+                                disabled={openCriticLoading}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+
+
+
+            {showUnlinkOpenCriticModal && (
+                <ConfirmModal
+                    title="Unlink OpenCritic"
+                    message={`Are you sure you want to unlink "${game.title}" from OpenCritic? The OpenCritic score and synchronization date will be cleared.`}
+                    confirmText="Unlink"
+                    onCancel={() => setShowUnlinkOpenCriticModal(false)}
+                    onConfirm={async () => {
+                        const success = await handleUnlinkOpenCritic()
+
+                        if (success) {
+                            setShowUnlinkOpenCriticModal(false)
+                        }
+                    }}
+                />
+            )}
+
+
 
             {showDeleteGameModal && (
                 <ConfirmModal

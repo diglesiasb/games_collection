@@ -258,3 +258,144 @@
     color: #ccc;
     font-size: 12px;
 }
+
+
+
+/* OpenCritic modal */
+
+.opencritic-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.opencritic-modal {
+    width: 100%;
+    max-width: 520px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background: #1e1e1e;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.opencritic-modal h2 {
+    margin: 0 0 12px;
+    font-size: 20px;
+}
+
+.opencritic-modal-subtitle {
+    color: #aaa;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.opencritic-loading {
+    color: #bbb;
+}
+
+.opencritic-error {
+    color: #ff8a8a;
+    font-size: 14px;
+    margin-top: 12px;
+}
+
+.opencritic-results {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.opencritic-result {
+    width: 100%;
+    padding: 12px;
+    text-align: left;
+    background: #252525;
+    border: 1px solid #444;
+    border-radius: 5px;
+    color: #ddd;
+    cursor: pointer;
+}
+
+.opencritic-result:hover {
+    background: #333;
+    border-color: #666;
+}
+
+.opencritic-selected-game {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #333;
+}
+
+.opencritic-selected-game h3 {
+    margin: 0 0 15px;
+}
+
+.opencritic-selected-game p {
+    color: #bbb;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.opencritic-selected-game strong {
+    color: #ddd;
+}
+
+.opencritic-modal-actions,
+.opencritic-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.opencritic-modal-actions button,
+.opencritic-modal-footer button {
+    padding: 8px 12px;
+    background: #252525;
+    border: 1px solid #444;
+    border-radius: 5px;
+    color: #ddd;
+    cursor: pointer;
+}
+
+.opencritic-modal-actions button:hover,
+.opencritic-modal-footer button:hover {
+    background: #333;
+    border-color: #666;
+}
+
+.opencritic-modal button:disabled,
+.game-detail-actions button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 500px) {
+    .opencritic-modal-overlay {
+        padding: 12px;
+    }
+
+    .opencritic-modal-actions {
+        justify-content: stretch;
+    }
+
+    .opencritic-modal-actions button {
+        flex: 1;
+    }
+
+    .game-detail-actions {
+        flex-wrap: wrap;
+    }
+}

@@ -7,10 +7,9 @@ function GameEditForm({ game, onCancel, onSave }) {
     const [genres, setGenres] = useState([])
 
     const [formData, setFormData] = useState({
-        title: game.title,
-        developer: game.developer,
-        publisher: game.publisher,
-        opencritic_score: game.opencritic_score ?? '',
+        title: game.title ?? '',
+        developer: game.developer ?? '',
+        publisher: game.publisher ?? '',
         genres: game.genres.map(genre => genre.id_genre)
     })
 
@@ -21,31 +20,9 @@ function GameEditForm({ game, onCancel, onSave }) {
     }, [])
 
     const validateForm = () => {
-
         if (!formData.title.trim()) {
             setErrors({ title: 'Title is required' })
             return false
-        }
-
-        if (!formData.developer.trim()) {
-            setErrors({ developer: 'Developer is required' })
-            return false
-        }
-
-        if (!formData.publisher.trim()) {
-            setErrors({ publisher: 'Publisher is required' })
-            return false
-        }
-
-        if (formData.opencritic_score !== '') {
-            const score = Number(formData.opencritic_score)
-
-            if (score < 0 || score > 100) {
-                setErrors({
-                    opencritic_score: 'Score must be between 0 and 100'
-                })
-                return false
-            }
         }
 
         setErrors({})
@@ -55,10 +32,10 @@ function GameEditForm({ game, onCancel, onSave }) {
     const handleChange = (event) => {
         const { name, value } = event.target
 
-        setFormData({
-            ...formData,
+        setFormData(prev => ({
+            ...prev,
             [name]: value
-        })
+        }))
     }
 
     const toggleGenre = (idGenre) => {
@@ -71,19 +48,14 @@ function GameEditForm({ game, onCancel, onSave }) {
     }
 
     const handleSubmit = async () => {
-
         if (!validateForm()) {
             return
         }
 
         const data = {
-            title: formData.title,
-            developer: formData.developer,
-            publisher: formData.publisher,
-            opencritic_score:
-                formData.opencritic_score === ''
-                    ? null
-                    : Number(formData.opencritic_score),
+            title: formData.title.trim(),
+            developer: formData.developer.trim() || null,
+            publisher: formData.publisher.trim() || null,
             genres: formData.genres
         }
 
@@ -169,24 +141,7 @@ function GameEditForm({ game, onCancel, onSave }) {
                     </label>
 
                 </div>
-
-                <div className="game-edit-row">
-
-                    <label>
-                        OpenCritic Score
-                        <input
-                            type="number"
-                            name="opencritic_score"
-                            min="0"
-                            max="100"
-                            value={formData.opencritic_score}
-                            onChange={handleChange}
-                        />
-                    </label>
-
-                </div>
-
-                
+              
 
                 <div className="game-edit-actions">
 
