@@ -58,11 +58,23 @@
   color: #bbbbbb;
 }
 
+.game-detail-developer strong,
+.game-detail-publisher strong,
+.game-detail-genres > strong {
+    display: inline-block;
+    width: 130px;
+}
+
 .game-detail-score {
   margin-top: 30px;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 15px;
+}
+
+.game-detail-score span:last-child {
+    font-size: 12px;
+    color: #888;    
 }
 
 .game-detail-score strong {
@@ -147,7 +159,7 @@
 }
 
 .status {
-  font-size: 13px;
+  font-size: 20px;
   color: #aaa;
 }
 
@@ -398,4 +410,64 @@
     .game-detail-actions {
         flex-wrap: wrap;
     }
+}
+
+
+.game-detail-actions .btn-edit {
+    background: #244b70;
+    border-color: #356b9c;
+}
+
+.game-detail-actions .btn-edit:hover {
+    background: #2e5d89;
+}
+
+.game-detail-actions .btn-opencritic {
+    background: #28533d;
+    border-color: #387653;
+}
+
+.game-detail-actions .btn-opencritic:hover {
+    background: #326b4d;
+}
+
+.game-detail-actions .btn-unlink {
+    background: #65451f;
+    border-color: #8a602b;
+}
+
+.game-detail-actions .btn-unlink:hover {
+    background: #805727;
+}
+
+.game-detail-actions .btn-delete {
+    background: #642d30;
+    border-color: #8b3d42;
+}
+
+.game-detail-actions .btn-delete:hover {
+    background: #7d363b;
+}
+
+
+.collection-item-actions .btn-edit {
+    background: #244b70;
+    border-color: #356b9c;
+    color: #eee;
+}
+
+.collection-item-actions .btn-edit:hover {
+    background: #2e5d89;
+    border-color: #356b9c;
+}
+
+.collection-item-actions .btn-delete {
+    background: #642d30;
+    border-color: #8b3d42;
+    color: #eee;
+}
+
+.collection-item-actions .btn-delete:hover {
+    background: #7d363b;
+    border-color: #8b3d42;
 }

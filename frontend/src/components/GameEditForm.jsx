@@ -141,10 +141,9 @@ function GameEditForm({ game, onCancel, onSave }) {
                     </label>
 
                 </div>
-              
+
 
                 <div className="game-edit-actions">
-
                     <button
                         type="button"
                         onClick={onCancel}
@@ -154,11 +153,11 @@ function GameEditForm({ game, onCancel, onSave }) {
 
                     <button
                         type="button"
+                        className="btn-save"
                         onClick={handleSubmit}
                     >
                         Save
                     </button>
-
                 </div>
 
                 {Object.values(errors)[0] && (

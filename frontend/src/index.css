@@ -78,7 +78,7 @@ body {
   max-width: calc(100% - 32px);
   padding: 16px;
   box-sizing: border-box;
-  background: var(--background);
+  background: black;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 8px;
 }

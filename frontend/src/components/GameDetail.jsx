@@ -154,39 +154,62 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                         <>
                             <h1>{game.title}</h1>
 
-                            <p className="game-detail-developer">
-                                <strong>Developer:</strong> {game.developer}
-                            </p>
+                            {game.developer && (
+                                <p className="game-detail-developer">
+                                    <strong>Developer:</strong> {game.developer}
+                                </p>
+                            )}
 
-                            <p className="game-detail-publisher">
-                                <strong>Publisher:</strong> {game.publisher}
-                            </p>
+                            {game.publisher && (
+                                <p className="game-detail-publisher">
+                                    <strong>Publisher:</strong> {game.publisher}
+                                </p>
+                            )}
 
-                            <div className="game-detail-genres">
-                                <strong>Genres:</strong>
+                            {game.genres?.length > 0 && (
 
-                                <div className="game-detail-genre-tags">
-                                    {game.genres.map(genre => (
-                                        <span key={genre.id_genre}>
-                                            {genre.genre}
-                                        </span>
-                                    ))}
+                                <div className="game-detail-genres">
+                                    <strong>Genres:</strong>
+
+                                    <div className="game-detail-genre-tags">
+                                        {game.genres.map(genre => (
+                                            <span key={genre.id_genre}>
+                                                {genre.genre}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
 
-                            <div className="game-detail-score">
-                                <span>OpenCritic Score:</span>
-                                <strong>{game.opencritic_score ?? 'N/A'}</strong>
-                            </div>
+
+                            {game.id_opencritic != null && (
+                                <div className="game-detail-score">
+                                    <span>OpenCritic Score:</span>
+                                    <strong>{game.opencritic_score ?? 'N/A'}</strong>
+
+
+
+                                    {game.opencritic_updated_at && (
+                                        <span>
+                                            (Last update: {new Date(`${game.opencritic_updated_at}Z`).toLocaleString()})
+                                        </span>
+                                    )}
+                                </div>
+                            )}
+
 
 
                             <div className="game-detail-actions">
-                                <button onClick={() => setEditingGame(true)}>
+                                <button
+                                    className="btn-edit"
+                                    onClick={() => setEditingGame(true)}
+                                >
                                     Edit
                                 </button>
 
                                 {game.id_opencritic == null ? (
                                     <button
+                                        className="btn-opencritic"
                                         onClick={handleOpenCriticSearch}
                                         disabled={openCriticLoading}
                                     >
@@ -195,6 +218,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                                 ) : (
                                     <>
                                         <button
+                                            className="btn-opencritic"
                                             onClick={handleUpdateOpenCritic}
                                             disabled={openCriticLoading}
                                         >
@@ -202,6 +226,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                                         </button>
 
                                         <button
+                                            className="btn-unlink"
                                             onClick={() => {
                                                 setOpenCriticError(null)
                                                 setShowUnlinkOpenCriticModal(true)
@@ -214,12 +239,14 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                                 )}
 
                                 <button
+                                    className="btn-delete"
                                     onClick={() => setShowDeleteGameModal(true)}
                                     disabled={openCriticLoading}
                                 >
                                     Delete
                                 </button>
                             </div>
+
 
                             {openCriticError && !showOpenCriticModal && (
                                 <p className="opencritic-error" role="alert">
@@ -324,31 +351,31 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
 
                                     <div className="collection-item-dates">
                                         <div>
-                                            <span>Released</span>
-                                            <strong>{item.release_date}</strong>
+                                            <span>Released</span>                                            
+                                            <strong>{new Date(`${item.release_date}`).toLocaleDateString()}</strong>
                                         </div>
 
                                         {item.purchase_date && (
                                             <div>
                                                 <span>Purchased</span>
-                                                <strong>{item.purchase_date}</strong>
+                                                <strong>{new Date(`${item.purchase_date}`).toLocaleDateString()}</strong>                                              
                                             </div>
                                         )}
 
-                                        {(item.starting_date || item.finished) && (
+                                        {(item.starting_date) && (
                                             <div>
                                                 <span>Started</span>
                                                 <strong>
-                                                    {item.starting_date ?? 'Unknown'}
+                                                    {new Date(`${item.starting_date}`).toLocaleDateString() ?? 'Unknown'}
                                                 </strong>
                                             </div>
                                         )}
 
-                                        {(item.finish_date || item.finished) && (
+                                        {(item.finish_date) && (
                                             <div>
                                                 <span>Completed</span>
                                                 <strong>
-                                                    {item.finish_date ?? 'Unknown'}
+                                                    {new Date(`${item.finish_date}`).toLocaleDateString() ?? 'Unknown'}
                                                 </strong>
                                             </div>
                                         )}
@@ -357,35 +384,35 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                                     <div className="collection-item-footer">
 
                                         <div className="collection-item-status">
-                                            {item.finished ? (
-                                                item.starting_date ||
-                                                    item.finish_date ||
-                                                    item.total_hours !== null ? (
+                                            {item.finished ? (                                                
+                                                item.total_hours !== null ? (
                                                     <span className="status finished">
                                                         {item.total_hours !== null
-                                                            ? `${item.total_hours} h`
+                                                            ? `Finished in ${item.total_hours} h`
                                                             : '? Hours'}
                                                     </span>
                                                 ) : (
                                                     <span className="status finished">
-                                                        Finished
+                                                        [Finished]
                                                     </span>
                                                 )
                                             ) : (
-                                                <span className="status">
-                                                    Not finished
+                                                <span className="status finished">
+                                                    [Not finished]
                                                 </span>
                                             )}
                                         </div>
 
                                         <div className="collection-item-actions">
                                             <button
+                                                className="btn-edit"
                                                 onClick={() => setEditingItem(item)}
                                             >
                                                 Edit
                                             </button>
 
                                             <button
+                                                className="btn-delete"
                                                 onClick={() => {
                                                     setItemToDelete(item)
                                                     setShowDeleteModal(true)
@@ -472,7 +499,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                                         }}
                                         disabled={openCriticLoading}
                                     >
-                                        Back 
+                                        Back
                                     </button>
 
                                     <button
@@ -482,7 +509,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                                         Confirm Link
                                     </button>
 
-                                    
+
                                 </div>
                             </div>
                         )}

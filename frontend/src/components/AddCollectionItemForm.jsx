@@ -168,7 +168,6 @@ function AddCollectionItemForm({ onCancel, onSave }) {
             </div>
 
             <div className="collection-item-form-actions">
-
                 <button
                     type="button"
                     onClick={onCancel}
@@ -176,10 +175,9 @@ function AddCollectionItemForm({ onCancel, onSave }) {
                     Cancel
                 </button>
 
-                <button type="submit">
+                <button type="submit" className="btn-save">
                     Add
                 </button>
-
             </div>
 
             {error && (

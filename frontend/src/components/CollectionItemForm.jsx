@@ -189,7 +189,7 @@ function CollectionItemForm({ item, onCancel, onSave }) {
                     Cancel
                 </button>
 
-                <button type="submit">
+                <button type="submit" className="btn-save">
                     Save
                 </button>
             </div>

@@ -390,7 +390,7 @@ function AddGame({ onBack, onGameCreated }) {
                         className="add-game-save"
                         onClick={handleSubmit}
                     >
-                        Add Game
+                        Add
                     </button>
                 </div>
 

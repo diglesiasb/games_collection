@@ -88,6 +88,16 @@
     background: #2a2a2a;
 }
 
+.game-edit-actions .btn-save {
+    background: #28533d;
+    border-color: #387653;
+    color: #eee;
+}
+
+.game-edit-actions .btn-save:hover {
+    background: #326b4d;
+}
+
 .game-edit-errors {
     margin-top: 15px;
     color: #ff6b6b;
