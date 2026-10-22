@@ -31,7 +31,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
     const [openCriticLoading, setOpenCriticLoading] = useState(false)
     const [openCriticError, setOpenCriticError] = useState(null)
     const [showUnlinkOpenCriticModal, setShowUnlinkOpenCriticModal] = useState(false)
-
+    
     async function handleOpenCriticSearch() {
         setOpenCriticLoading(true)
         setOpenCriticError(null)
@@ -351,14 +351,20 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
 
                                     <div className="collection-item-dates">
                                         <div>
-                                            <span>Released</span>                                            
-                                            <strong>{new Date(`${item.release_date}`).toLocaleDateString()}</strong>
+                                            <span>Released</span>
+                                            <div className="release-date-value">
+                                                <strong>
+                                                    {item.release_date === '1900-01-01'
+                                                        ? 'Pending'
+                                                        : new Date(`${item.release_date}T00:00:00`).toLocaleDateString()}
+                                                </strong>                                                
+                                            </div>
                                         </div>
 
                                         {item.purchase_date && (
                                             <div>
                                                 <span>Purchased</span>
-                                                <strong>{new Date(`${item.purchase_date}`).toLocaleDateString()}</strong>                                              
+                                                <strong>{new Date(`${item.purchase_date}`).toLocaleDateString()}</strong>
                                             </div>
                                         )}
 
@@ -384,7 +390,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                                     <div className="collection-item-footer">
 
                                         <div className="collection-item-status">
-                                            {item.finished ? (                                                
+                                            {item.finished ? (
                                                 item.total_hours !== null ? (
                                                     <span className="status finished">
                                                         {item.total_hours !== null

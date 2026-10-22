@@ -202,6 +202,34 @@ export async function createCollection(data) {
   return await response.json();
 }
 
+
+export async function previewGameImport(idGamePlatform, file) {
+  const formData = new FormData();
+  formData.append("id_game_platform", idGamePlatform);
+  formData.append("file", file);
+
+  const response = await apiFetch(
+    `${API_URL}/collection-import/preview`,
+    {
+      method: "POST",
+      body: formData,
+    },
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+
+    throw new Error(
+      error.detail?.[0]?.msg ??
+        error.detail ??
+        "Error previewing game import",
+    );
+  }
+
+  return await response.json();
+}
+
+
 //#endregion
 
 //#region Collection Items

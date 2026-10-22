@@ -471,3 +471,42 @@
     background: #7d363b;
     border-color: #8b3d42;
 }
+
+.release-date-value {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 4px;
+    flex-wrap: nowrap;
+}
+
+.release-date-warning {    
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #d6a348;
+    font-size: 14px;    
+}
+
+.release-date-warning:hover {
+    color: #f0c36a;
+}
+
+.release-date-warning:focus-visible {
+    outline: 2px solid #d6a348;
+    outline-offset: 3px;
+    border-radius: 3px;
+}
+
+.release-date-warning-message {
+    margin: 6px 0 0;
+    padding: 8px 10px;
+    max-width: 280px;
+    border-left: 2px solid #d6a348;
+    border-radius: 3px;
+    background: #29251d;
+    color: #e5d9c3;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.5;
+}

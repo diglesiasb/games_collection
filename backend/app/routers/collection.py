@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select
+import httpx
+import re
+
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+from sqlalchemy import select, func
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 from pathlib import Path
-import httpx
 
 from ..database import engine
 from ..models.game import Game
@@ -243,4 +245,136 @@ def create_collection(
     return {
         "game": new_game,
         "collection_item": new_item,
+    }
+
+
+
+@router.post("/collection-import/preview")
+async def preview_collection_import(
+    id_game_platform: int = Form(...),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    # Validate platform
+    platform = db.get(GamePlatform, id_game_platform)
+
+    if platform is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Platform does not exist",
+        )
+
+    # Read text file
+    content = await file.read()
+
+    try:
+        text = content.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        raise HTTPException(
+            status_code=400,
+            detail="The file must be a UTF-8 text file",
+        )
+
+    if not text.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="The file is empty",
+        )
+
+    items = []
+    seen_titles = set()
+
+    for line_number, raw_line in enumerate(text.splitlines(), start=1):
+        line = raw_line.strip()
+
+        # Ignore blank lines
+        if not line:
+            continue
+
+        # An asterisk at the end means finished
+        finished = line.endswith("*")
+
+        if finished:
+            line = line[:-1].strip()
+
+        if not line:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Empty title on line {line_number}",
+            )
+
+        normalized_title = line.casefold()
+
+        # Detect repeated titles within the uploaded file
+        if normalized_title in seen_titles:
+            items.append({
+                "title": line,
+                "finished": finished,
+                "status": "duplicate_in_file",
+                "reason": "This title already appears in the file",
+                "id_game": None,
+                "line_number": line_number,
+            })
+            continue
+
+        seen_titles.add(normalized_title)
+
+        # Find an existing game by exact title,
+        # ignoring case and surrounding whitespace
+        game = db.execute(
+            select(Game).where(
+                func.lower(func.trim(Game.title))
+                == line.lower()
+            )
+        ).scalars().first()
+
+        if game is None:
+            status = "new_game"
+            reason = "A new game and collection item will be created"
+
+        else:
+            collection_item = db.execute(
+                select(CollectionItem).where(
+                    CollectionItem.id_game == game.id_game,
+                    CollectionItem.id_game_platform == id_game_platform,
+                )
+            ).scalars().first()
+
+            if collection_item is not None:
+                status = "already_in_collection"
+                reason = "This game is already in the selected platform"
+            else:
+                status = "add_to_collection"
+                reason = "The game exists and will be added to the collection"
+
+        items.append({
+            "title": line,
+            "finished": finished,
+            "status": status,
+            "reason": reason,
+            "id_game": game.id_game if game else None,
+            "line_number": line_number,
+        })
+
+    summary = {
+        "total": len(items),
+        "new_games": sum(
+            item["status"] == "new_game" for item in items
+        ),
+        "add_to_collection": sum(
+            item["status"] == "add_to_collection" for item in items
+        ),
+        "already_in_collection": sum(
+            item["status"] == "already_in_collection" for item in items
+        ),
+        "duplicate_in_file": sum(
+            item["status"] == "duplicate_in_file" for item in items
+        ),
+    }
+
+    return {
+        "id_game_platform": platform.id_game_platform,
+        "platform_name": platform.name,
+        "summary": summary,
+        "items": items,
     }
