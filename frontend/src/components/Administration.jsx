@@ -1,6 +1,6 @@
 import './Administration.css'
 
-function Administration({ onBack, onPlatforms, onGenres }) {
+function Administration({ onBack, onPlatforms, onGenres, onImportPlatformGames }) {
     return (
         <div className="administration">
             <button
@@ -31,6 +31,18 @@ function Administration({ onBack, onPlatforms, onGenres }) {
 
                 <span className="administration-option-description">
                     Manage genres
+                </span>
+            </button>
+            <button
+                className="administration-option"
+                onClick={onImportPlatformGames}
+            >
+                <span className="administration-option-title">
+                    Import Platform Games
+                </span>
+
+                <span className="administration-option-description">
+                    Import games from a text file
                 </span>
             </button>
         </div>

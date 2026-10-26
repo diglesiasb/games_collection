@@ -6,6 +6,7 @@ import Collection from './components/Collection'
 import Administration from './components/Administration'
 import Platforms from './components/Platforms'
 import Genres from './components/Genres'
+import ImportPlatformGames from './components/ImportPlatformGames'
 
 function App() {
 
@@ -229,15 +230,23 @@ function App() {
                     onBack={() => setSection('collection')}
                     onPlatforms={() => setSection('platforms')}
                     onGenres={() => setSection('genres')}
+                    onImportPlatformGames={() => setSection('import-platform-games')}
                 />
             ) : section === 'platforms' ? (
                 <Platforms
                     onBack={() => setSection('administration')}
                 />
-            ) : (
+            ) : section === 'genres' ? (
                 <Genres
                     onBack={() => setSection('administration')}
                 />
+            ) : section === 'import-platform-games' ? (
+                <ImportPlatformGames
+                    onBack={() => setSection('administration')}
+                    onImportComplete={() => setSection('collection')}
+                />
+            ) : (
+                <Collection />
             )}
         </main>
     )

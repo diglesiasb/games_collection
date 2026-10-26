@@ -1,6 +1,8 @@
 import httpx
 import re
 
+from datetime import date
+
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session
@@ -371,6 +373,177 @@ async def preview_collection_import(
             item["status"] == "duplicate_in_file" for item in items
         ),
     }
+
+    return {
+        "id_game_platform": platform.id_game_platform,
+        "platform_name": platform.name,
+        "summary": summary,
+        "items": items,
+    }
+
+
+@router.post("/collection-import/import")
+async def import_collection_games(
+    id_game_platform: int = Form(...),
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    # Validate platform
+    platform = db.get(GamePlatform, id_game_platform)
+
+    if platform is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Platform does not exist",
+        )
+
+    # Read text file
+    content = await file.read()
+
+    try:
+        text = content.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        raise HTTPException(
+            status_code=400,
+            detail="The file must be a UTF-8 text file",
+        )
+
+    if not text.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="The file is empty",
+        )
+
+    items = []
+    seen_titles = set()
+
+    summary = {
+        "total": 0,
+        "new_games": 0,
+        "add_to_collection": 0,
+        "already_in_collection": 0,
+        "duplicate_in_file": 0,
+    }
+
+    try:
+        for line_number, raw_line in enumerate(
+            text.splitlines(), start=1
+        ):
+            line = raw_line.strip()
+
+            # Ignore blank lines
+            if not line:
+                continue
+
+            # An asterisk at the end means finished
+            finished = line.endswith("*")
+
+            if finished:
+                line = line[:-1].strip()
+
+            if not line:
+                raise HTTPException(
+                    status_code=400,
+                    detail=f"Empty title on line {line_number}",
+                )
+
+            normalized_title = line.casefold()
+
+            # Detect repeated titles within the uploaded file
+            if normalized_title in seen_titles:
+                summary["duplicate_in_file"] += 1
+                summary["total"] += 1
+
+                items.append({
+                    "title": line,
+                    "finished": finished,
+                    "status": "duplicate_in_file",
+                    "line_number": line_number,
+                })
+                continue
+
+            seen_titles.add(normalized_title)
+
+            # Find an existing game by exact title
+            game = db.execute(
+                select(Game).where(
+                    func.lower(func.trim(Game.title))
+                    == line.lower()
+                )
+            ).scalars().first()
+
+            if game is None:
+                game = Game(title=line)
+                db.add(game)
+                db.flush()
+
+                status = "new_game"
+                summary["new_games"] += 1
+
+            else:
+                collection_item = db.execute(
+                    select(CollectionItem).where(
+                        CollectionItem.id_game == game.id_game,
+                        CollectionItem.id_game_platform
+                        == id_game_platform,
+                    )
+                ).scalars().first()
+
+                if collection_item is not None:
+                    status = "already_in_collection"
+                    summary["already_in_collection"] += 1
+
+                    summary["total"] += 1
+                    items.append({
+                        "title": line,
+                        "finished": finished,
+                        "status": status,
+                        "id_game": game.id_game,
+                        "line_number": line_number,
+                    })
+                    continue
+
+                status = "add_to_collection"
+                summary["add_to_collection"] += 1
+
+            # Create the collection entry
+            collection_item = CollectionItem(
+                id_game=game.id_game,
+                id_game_platform=id_game_platform,
+                edition="Standard",
+                type="Physical",
+                release_date=date(1900, 1, 1),
+                finished=finished,
+                finish_date=None,
+            )
+
+            db.add(collection_item)
+
+            summary["total"] += 1
+
+            items.append({
+                "title": line,
+                "finished": finished,
+                "status": status,
+                "id_game": game.id_game,
+                "line_number": line_number,
+            })
+
+        # Commit everything together
+        db.commit()
+
+    except HTTPException:
+        db.rollback()
+        raise
+
+    except Exception as exc:
+        db.rollback()
+        print(f"Error importing collection games: {exc}")
+
+        raise HTTPException(
+            status_code=500,
+            detail="An error occurred while importing the games",
+        )
 
     return {
         "id_game_platform": platform.id_game_platform,
