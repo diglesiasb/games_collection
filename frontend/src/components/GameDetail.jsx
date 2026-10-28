@@ -31,6 +31,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
     const [openCriticLoading, setOpenCriticLoading] = useState(false)
     const [openCriticError, setOpenCriticError] = useState(null)
     const [showUnlinkOpenCriticModal, setShowUnlinkOpenCriticModal] = useState(false)
+    const [imageVersion, setImageVersion] = useState(0)
     
     async function handleOpenCriticSearch() {
         setOpenCriticLoading(true)
@@ -77,6 +78,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
 
             const updatedGame = await getGame(game.id_game)
 
+            setImageVersion(version => version + 1)
             setShowOpenCriticModal(false)
             setSelectedOpenCriticGame(null)
             onGameUpdated(updatedGame)
@@ -131,7 +133,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
 
                 <div className="game-detail-image">
                     <img
-                        src={`http://192.168.0.54:8000/games/${game.id_game}/image`}
+                        src={`http://192.168.0.54:8000/games/${game.id_game}/image?v=${imageVersion}`}
                         alt={game.title}
                     />
                 </div>
@@ -509,6 +511,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
                                     </button>
 
                                     <button
+                                        className="opencritic-modal-actions-confirmLink"
                                         onClick={handleLinkOpenCritic}
                                         disabled={openCriticLoading}
                                     >

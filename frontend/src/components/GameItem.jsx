@@ -113,9 +113,6 @@ function GameItem({ game, onClick }) {
             <div className="game-card-content">
                 <h2>{game.title}</h2>
 
-                <p className="game-card-developer">
-                    {game.developer}
-                </p>
 
                 <div className="game-card-platforms">
                     {game.platforms.map(platform => (

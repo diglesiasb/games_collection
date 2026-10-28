@@ -4,7 +4,7 @@ A personal web application to manage, organize, and explore a video game collect
 
 The goal is to keep track of the games I own, the platforms and editions in my collection, my gaming history, and useful information about each game — all in one place.
 
-The project is being built incrementally, with a long-term goal of adding an AI assistant that can understand natural-language requests and interact with the collection through controlled application operations.
+The project is approaching its first stable release, **version 1.0**, focused on reliable collection management and OpenCritic integration. Future versions may introduce collection statistics, richer game information, and an AI assistant.
 
 ---
 
@@ -12,10 +12,11 @@ The project is being built incrementally, with a long-term goal of adding an AI 
 
 ### Game management
 
-- Browse the game collection.
+- Browse the game collection in a visual grid with game cover artwork.
 - Create, edit, view, and delete games.
 - Store game details such as title, developer, publisher, genres, and OpenCritic score.
 - Manage genre associations without losing existing information during metadata synchronization.
+- Display a fallback image when cover artwork is unavailable.
 
 ### Collection items
 
@@ -23,6 +24,14 @@ The project is being built incrementally, with a long-term goal of adding an AI 
 - Track platform, edition, and item type.
 - Store release and purchase dates.
 - Record start and completion dates, completion status, and playing time.
+- Manage collection items independently for each platform.
+
+### Search, filtering, and sorting
+
+- Search games by title.
+- Filter the collection by platform, genre, and completion status.
+- Sort games by title, OpenCritic score, or release date.
+- Combine filters to find specific games in the collection.
 
 ### OpenCritic integration
 
@@ -37,6 +46,15 @@ The project is being built incrementally, with a long-term goal of adding an AI 
 - Cache game cover artwork locally and replace it with the OpenCritic image during synchronization when an image is available.
 
 OpenCritic synchronization is designed to preserve manually maintained game details while updating the fields controlled by the integration.
+
+### Bulk collection import
+
+- Import game lists from `.txt` files for a selected platform.
+- Preview the import before making changes to the collection.
+- Identify new games, existing games that can be added to another platform, games already in the collection, and duplicate entries within the file.
+- Use a trailing `*` to mark games as completed.
+- Import games and collection items while avoiding duplicate entries.
+- Review a summary of the import results.
 
 ---
 
@@ -80,14 +98,9 @@ OpenCritic synchronization is designed to preserve manually maintained game deta
 
 ---
 
-## 🎯 Project Goals
+## 🎯 Project Scope
 
-### Collection management
-
-- Manage games and their associated collection items.
-- Organize owned games by platform, edition, and type.
-- Search and filter the collection.
-- Keep game metadata editable while respecting fields managed by external services.
+The first stable release focuses on the features needed to maintain and explore a personal video game collection.
 
 ### Game information
 
@@ -110,7 +123,7 @@ Collection items can track:
 - Completion status
 - Playing time
 
-Possible future additions include personal notes, richer status tracking, and collection statistics.
+The application distinguishes between game metadata and individual collection items, allowing a single game to be associated with multiple platforms.
 
 ---
 
@@ -152,7 +165,7 @@ This feature is part of the future roadmap and is not yet implemented.
 
 ## 📱 Responsive Application
 
-The frontend is built with React and is intended to support desktop and mobile screens. Responsive improvements and a possible Progressive Web App (PWA) remain future work.
+The frontend is built with React and is intended to support desktop and mobile screens. Further responsive improvements and a possible Progressive Web App (PWA) remain future work.
 
 ---
 
@@ -166,7 +179,7 @@ PostgreSQL runs in Docker, with Docker Compose used for service configuration. A
 
 ## 🚧 Development Roadmap
 
-The project is developed incrementally. The checklist below distinguishes existing functionality from planned work.
+The project is developed incrementally. The checklist below distinguishes implemented functionality from remaining work and possible future additions.
 
 ### Foundation
 
@@ -189,7 +202,9 @@ The project is developed incrementally. The checklist below distinguishes existi
 - [x] Preserve manually maintained fields during OpenCritic synchronization
 - [x] Track OpenCritic synchronization timestamps
 - [x] Cache game artwork locally
-- [ ] Review and expand API validation, error handling, and automated tests
+- [x] Implement collection import preview and import operations
+- [ ] Review API validation and error handling
+- [ ] Expand automated backend tests
 
 ### Frontend
 
@@ -198,9 +213,11 @@ The project is developed incrementally. The checklist below distinguishes existi
 - [x] Implement game editing
 - [x] Implement collection item management
 - [x] Integrate OpenCritic linking and synchronization into game details
-- [ ] Refine the visual design and interaction feedback
-- [ ] Improve responsive layouts
-- [ ] Add search and filtering improvements
+- [x] Implement search, filtering, and sorting
+- [x] Implement platform game import with preview and confirmation
+- [x] Add confirmation and result feedback for destructive and import operations
+- [ ] Complete final visual and usability review
+- [ ] Verify responsive layouts on desktop and mobile
 
 ### External data and maintenance
 
@@ -208,30 +225,33 @@ The project is developed incrementally. The checklist below distinguishes existi
 - [x] Store external game identifiers
 - [x] Synchronize supported metadata and scores
 - [x] Retrieve and cache cover artwork
-- [ ] Improve cache maintenance and image error handling
-- [ ] Add collection import and bulk metadata lookup
+- [x] Refresh displayed cover artwork after OpenCritic linking
+- [ ] Review image caching and error handling
 - [ ] Evaluate additional game data sources
 
-### AI assistant
+### Version 1.0 release
 
-- [ ] Add an AI assistant
-- [ ] Implement tool/function calling
-- [ ] Define controlled game and collection operations
-- [ ] Support natural-language collection queries
+- [ ] Test the main application workflows end to end
+- [ ] Verify collection creation, editing, deletion, and import
+- [ ] Verify OpenCritic linking, updating, and unlinking
+- [ ] Review known issues and fix any remaining release blockers
+- [ ] Verify backup and recovery procedures
+- [ ] Tag the stable release as `v1.0.0`
 
-### Security, deployment, and reliability
+### Future versions
 
-- [ ] Add authentication
+- [ ] Add collection statistics and visualizations
+- [ ] Add game descriptions and story summaries
+- [ ] Explore richer gaming history and personal notes
+- [ ] Consider additional collection status options
+- [ ] Evaluate Progressive Web App (PWA) support
+- [ ] Add an AI assistant with controlled application operations
+- [ ] Add authentication if required
 - [ ] Deploy to the Raspberry Pi 4
 - [ ] Configure secure remote access
-- [ ] Implement automated database backups
-- [ ] Add automated tests and operational monitoring
+- [ ] Improve automated backups and operational monitoring
 
-### Future improvements
-
-- [ ] Add collection statistics and advanced filters
-- [ ] Improve gaming history and personal notes
-- [ ] Evaluate PWA support
+Future items are ideas rather than commitments for the first stable release.
 
 ---
 
@@ -263,15 +283,19 @@ Next feature
 
 Small, focused changes make it easier to identify problems and return to a known-good version.
 
+For the first stable release, the focus shifts from adding features to testing existing functionality, fixing defects, and polishing the user experience.
+
 ---
 
 ## 📌 Current Status
 
-**Active development — core collection management and OpenCritic integration implemented.**
+**Version 1.0 — Feature development complete; final testing and polish in progress.**
 
-The application has a React frontend, a FastAPI backend, a PostgreSQL database, collection item management, and OpenCritic integration for linking games, synchronizing metadata and scores, and updating cached cover artwork.
+The application includes a React frontend, a FastAPI backend, a PostgreSQL database, collection item management, search and filtering, bulk platform game import, and OpenCritic integration for linking games, synchronizing metadata and scores, and updating cached cover artwork.
 
-The next focus is to refine the interface and continue improving reliability. The AI assistant, authentication, deployment hardening, and automated database backups remain future milestones.
+The immediate goal is to verify the existing workflows, resolve any remaining issues, and prepare a stable first release.
+
+Collection statistics, richer game information, the AI assistant, and additional deployment improvements remain outside the initial release scope.
 
 ---
 

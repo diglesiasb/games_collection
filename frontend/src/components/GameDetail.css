@@ -394,6 +394,18 @@
     cursor: not-allowed;
 }
 
+.opencritic-modal-actions .opencritic-modal-actions-confirmLink {
+    background: #28533d;
+    border-color: #387653;
+    color: #fff;
+}
+
+.opencritic-modal-actions .opencritic-modal-actions-confirmLink:hover {
+      background: #326b4d;
+}
+
+
+
 @media (max-width: 500px) {
     .opencritic-modal-overlay {
         padding: 12px;
