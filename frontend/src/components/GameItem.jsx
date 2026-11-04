@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_URL } from '../services/apiConfig.js'
 import './GameItem.css'
 
 function GameItem({ game, onClick }) {
@@ -16,7 +17,7 @@ function GameItem({ game, onClick }) {
             <div className="game-card-image">
                 {!imageError ? (
                     <img
-                        src={`http://192.168.0.54:8000/games/${game.id_game}/image`}
+                        src={`${API_URL}/games/${game.id_game}/image`}
                         alt={game.title}
                         onError={() => setImageError(true)}
                     />

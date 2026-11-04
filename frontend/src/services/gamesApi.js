@@ -1,4 +1,4 @@
-const API_URL = "http://192.168.0.54:8000";
+import { API_URL } from './apiConfig.js'
 
 
 let activeRequests = 0

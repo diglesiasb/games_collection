@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { API_URL } from '../services/apiConfig.js'
 import './GameDetail.css'
 import ConfirmModal from './ConfirmModal'
 import CollectionItemForm from './CollectionItemForm'
@@ -133,7 +134,7 @@ function GameDetail({ game, onBack, onDeleteCollectionItem, onGameUpdated }) {
 
                 <div className="game-detail-image">
                     <img
-                        src={`http://192.168.0.54:8000/games/${game.id_game}/image?v=${imageVersion}`}
+                        src={`${API_URL}/games/${game.id_game}/image?v=${imageVersion}`}
                         alt={game.title}
                     />
                 </div>
